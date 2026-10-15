@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { form, loading, saving, error, notice, isDirty, logoPreview, updatedLabel, save, load, discard, addItem, removeItem, moveItem, uploadLogo } = useAdminHeader()
+const { form, loading, saving, error, notice, isDirty, logoPreview, updatedLabel, save, load, discard, addItem, removeItem, moveItem, uploadLogo, removeLogo } = useAdminHeader()
 </script>
 
 <template>
@@ -13,14 +13,16 @@ const { form, loading, saving, error, notice, isDirty, logoPreview, updatedLabel
       <UAlert v-if="error" color="error" variant="soft" :description="error" role="alert"><template #actions><UButton label="Загрузить заново" color="error" variant="outline" size="xs" @click="load" /></template></UAlert>
       <UAlert v-if="notice" color="success" variant="soft" :description="notice" role="status" />
       <form id="header-settings" class="space-y-6" @submit.prevent="save">
+        <fieldset :disabled="saving" class="space-y-6">
         <UCard>
-          <template #header><div class="flex items-start gap-3"><div class="flex size-9 items-center justify-center rounded-lg bg-slate-100 text-slate-500"><UIcon name="i-lucide-image" class="size-5" /></div><div><h2 class="font-semibold">Логотип</h2><p class="mt-1 text-sm text-slate-500">SVG сохранится в настройках сайта.</p></div></div></template>
+          <template #header><div class="flex items-start gap-3"><div class="flex size-9 items-center justify-center rounded-lg bg-slate-100 text-slate-500"><UIcon name="i-lucide-image" class="size-5" /></div><div><h2 class="font-semibold">Логотип</h2><p class="mt-1 text-sm text-slate-500">Файл сохранится в Media / Header после нажатия «Сохранить».</p></div></div></template>
           <div class="grid gap-6 tablet:grid-cols-[1fr_240px]">
             <div class="space-y-4">
               <UFormField label="SVG-код логотипа" description="Самостоятельный SVG до 200 КБ, без скриптов и внешних ресурсов."><UTextarea v-model="form.logoSvg" name="logoSvg" aria-label="SVG-код логотипа" :rows="7" class="w-full font-mono" :ui="{ base: 'font-mono text-xs' }" /></UFormField>
-              <label class="inline-flex cursor-pointer items-center gap-2 rounded-md border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"><UIcon name="i-lucide-upload" class="size-4" />Загрузить SVG<input type="file" accept="image/svg+xml,.svg" class="sr-only" @change="uploadLogo"></label>
+              <div class="flex flex-wrap items-center gap-3"><label class="inline-flex cursor-pointer items-center gap-2 rounded-md border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"><UIcon name="i-lucide-upload" class="size-4" />Загрузить SVG<input type="file" accept="image/svg+xml,.svg" class="sr-only" @change="uploadLogo"></label><UButton type="button" icon="i-lucide-trash-2" label="Удалить" color="error" variant="outline" :disabled="!form.logoSvg" @click="removeLogo" /></div>
+              <p class="text-xs text-slate-500">{{ form.logoSvg ? `Media / Header / ${form.logoFilename || 'logo.svg'}` : 'Логотип отсутствует. Удаление из Storage применится при сохранении.' }}</p>
             </div>
-            <div><p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-400">Предпросмотр</p><div class="flex min-h-36 items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6"><img :src="logoPreview" alt="Предпросмотр логотипа" class="max-h-24 max-w-full"></div><p class="mt-3 text-xs leading-5 text-slate-400">Пропорции оригинального логотипа сохраняются.</p></div>
+            <div><p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-400">Предпросмотр</p><div class="flex min-h-36 items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6"><img v-if="form.logoSvg" :src="logoPreview" alt="Предпросмотр логотипа" class="max-h-24 max-w-full"><span v-else class="text-sm text-slate-400">Логотип не загружен</span></div><p class="mt-3 text-xs leading-5 text-slate-400">Пропорции оригинального логотипа сохраняются.</p></div>
           </div>
         </UCard>
         <UCard>
@@ -40,6 +42,7 @@ const { form, loading, saving, error, notice, isDirty, logoPreview, updatedLabel
           <template #header><div class="flex gap-3"><div class="flex size-9 items-center justify-center rounded-lg bg-slate-100 text-slate-500"><UIcon name="i-lucide-mouse-pointer-2" class="size-5" /></div><div><h2 class="font-semibold">Кнопка заявки</h2><p class="mt-1 text-sm text-slate-500">Текст кнопки в правой части хедера.</p></div></div></template>
           <UFormField label="Название кнопки" description="До 60 символов."><UInput v-model="form.buttonLabel" name="buttonLabel" aria-label="Название кнопки" maxlength="60" class="w-full max-w-96" /></UFormField>
         </UCard>
+        </fieldset>
       </form>
       <div class="flex flex-wrap items-center justify-between gap-4 pb-4"><p class="text-xs text-slate-400">Последнее сохранение: {{ updatedLabel }}</p><UButton form="header-settings" type="submit" label="Сохранить изменения" :loading="saving" :disabled="!isDirty" /></div>
     </div>

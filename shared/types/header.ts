@@ -6,6 +6,9 @@ export interface HeaderMenuItem {
 
 export interface HeaderSettings {
   logoSvg: string
+  logoPath?: string | null
+  logoFilename?: string
+  mediaCleanupPending?: boolean
   menuItems: HeaderMenuItem[]
   buttonLabel: string
   revision: number

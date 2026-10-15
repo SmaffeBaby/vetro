@@ -12,7 +12,8 @@ export function isSafeMenuHref(value: string): boolean {
 }
 
 export const headerInputSchema = z.object({
-  logoSvg: z.string().trim().min(1, 'Добавьте SVG логотипа').max(200_000, 'SVG должен быть меньше 200 КБ'),
+  logoSvg: z.string().trim().max(200_000, 'SVG должен быть меньше 200 КБ'),
+  logoFilename: z.string().trim().max(180).optional(),
   menuItems: z.array(z.object({
     id: z.string().regex(/^[a-zA-Z0-9_-]{1,80}$/, 'Некорректный ID пункта'),
     label: z.string().trim().min(1, 'Введите название пункта').max(80, 'Максимум 80 символов'),

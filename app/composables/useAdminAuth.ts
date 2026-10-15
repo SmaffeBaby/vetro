@@ -8,7 +8,7 @@ export function useAdminAuth() {
   const error = ref('')
   const credentials = reactive({ email: '', password: '' })
 
-  async function adminFetch<T>(url: string, options: { method?: 'PUT'; body?: Record<string, unknown> } = {}): Promise<T> {
+  async function adminFetch<T>(url: string, options: { method?: 'PUT' | 'POST' | 'DELETE'; body?: Record<string, unknown> | FormData } = {}): Promise<T> {
     const { data } = await $supabase.auth.getSession()
     if (!data.session) throw new Error('Сессия завершилась. Войдите снова.')
     return await $fetch(url, { ...options, headers: { Authorization: `Bearer ${data.session.access_token}` } }) as T

@@ -4,6 +4,7 @@ import { headerInputSchema } from '#shared/utils/header'
 
 export function useAdminHeader() {
   const { adminFetch } = useAdminAuth()
+  const media = useMedia('Header')
   const form = reactive<HeaderSettings>(structuredClone(defaultHeader))
   const loading = ref(true)
   const saving = ref(false)
@@ -11,7 +12,7 @@ export function useAdminHeader() {
   const notice = ref('')
   const snapshot = ref('')
   const loaded = ref(false)
-  const isDirty = computed(() => loaded.value && JSON.stringify(form) !== snapshot.value)
+  const isDirty = computed(() => loaded.value && (JSON.stringify(form) !== snapshot.value || form.mediaCleanupPending === true))
   const logoPreview = useHeaderLogo(() => form.logoSvg)
   const updatedLabel = computed(() => form.updatedAt ? new Intl.DateTimeFormat('ru', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(form.updatedAt)) : 'Ещё не сохранено')
 
@@ -35,7 +36,8 @@ export function useAdminHeader() {
     try {
       accept(await adminFetch<HeaderSettings>('/api/admin/header', { method: 'PUT', body: parsed.data }))
       await refreshNuxtData('site-header')
-      notice.value = 'Хедер опубликован. Изменения уже доступны на сайте.'
+      if (form.mediaCleanupPending) error.value = 'Хедер сохранён, но Storage не удалил старый файл. Нажмите «Сохранить» для повторной попытки.'
+      else notice.value = 'Хедер опубликован. Изменения уже доступны на сайте.'
     } catch (e) { error.value = message(e) }
     finally { saving.value = false }
   }
@@ -54,14 +56,24 @@ export function useAdminHeader() {
     const input = event.target as HTMLInputElement
     const file = input.files?.[0]
     if (!file) return
-    if (file.size > 200_000) { error.value = 'SVG должен быть меньше 200 КБ'; return }
-    form.logoSvg = await file.text()
-    input.value = ''
+    if (saving.value) { input.value = ''; return }
+    error.value = ''; notice.value = ''
+    try {
+      const selected = await media.readFile(file, { svgOnly: true })
+      form.logoSvg = selected.text
+      form.logoFilename = selected.name
+    } catch (e) { error.value = (e as Error).message }
+    finally { input.value = '' }
+  }
+  function removeLogo() {
+    form.logoSvg = ''
+    form.logoFilename = 'logo.svg'
+    error.value = ''; notice.value = ''
   }
   function discard() { if (snapshot.value) accept(JSON.parse(snapshot.value)); error.value = ''; notice.value = '' }
   function warnUnsaved(event: BeforeUnloadEvent) { if (isDirty.value && !loading.value) { event.preventDefault(); event.returnValue = '' } }
   onMounted(() => { void load(); window.addEventListener('beforeunload', warnUnsaved) })
   onBeforeUnmount(() => window.removeEventListener('beforeunload', warnUnsaved))
   onBeforeRouteLeave(() => !isDirty.value || window.confirm('Есть несохранённые изменения. Покинуть страницу?'))
-  return { form, loading, saving, error, notice, isDirty, logoPreview, updatedLabel, save, load, discard, addItem, removeItem, moveItem, uploadLogo }
+  return { form, loading, saving, error, notice, isDirty, logoPreview, updatedLabel, save, load, discard, addItem, removeItem, moveItem, uploadLogo, removeLogo }
 }
