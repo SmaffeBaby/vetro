@@ -7,7 +7,7 @@ const emit = defineEmits<{ request: [] }>()
 </script>
 
 <template>
-  <footer id="contacts" class="site-footer bg-[#203b5c] text-[#dce5ef]">
+  <footer id="footer" class="site-footer bg-[#203b5c] text-[#dce5ef]">
     <div class="mx-auto max-w-480 px-5 py-12 tablet:px-8 tablet:py-16 desktop:px-[4.95%] desktop:pb-15 desktop:pt-20">
       <div class="grid items-start gap-10 desktop:grid-cols-[minmax(180px,1fr)_minmax(0,2fr)_minmax(240px,352px)] desktop:gap-14">
         <FooterLeftContent :svg="footer.logoSvg" :path="footer.logoPath" :text="footer.text" :year="year" />

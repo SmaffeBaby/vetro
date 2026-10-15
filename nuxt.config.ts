@@ -19,7 +19,8 @@ export default defineNuxtConfig({
   },
   security: {
     headers: {
-      contentSecurityPolicy: { 'upgrade-insecure-requests': false },
+      contentSecurityPolicy: { 'upgrade-insecure-requests': false, 'frame-src': ["'self'", 'https://yandex.ru'] },
+      permissionsPolicy: { fullscreen: ['self', 'https://yandex.ru'] },
       strictTransportSecurity: false,
       crossOriginOpenerPolicy: false,
       originAgentCluster: false

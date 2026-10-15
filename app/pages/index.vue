@@ -5,6 +5,7 @@
       <Hero />
       <Skills />
       <AboutCard />
+      <Contacts />
     </main>
     <Footer />
   </div>
