@@ -6,5 +6,6 @@
       <Skills />
       <AboutCard />
     </main>
+    <Footer />
   </div>
 </template>
