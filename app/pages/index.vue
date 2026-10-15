@@ -5,6 +5,7 @@
       <Hero />
       <Skills />
       <AboutCard />
+      <FAQ />
       <Contacts />
     </main>
     <Footer />

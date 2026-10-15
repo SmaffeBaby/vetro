@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Invalid media path' })
   }
   // Published header objects are owned and removed by the header save workflow.
+  if (component === 'FAQ') throw createError({ statusCode: 409, data: { message: 'Удалите SVG через настройки вопросов и сохраните изменения.' } })
   if (component === 'Contacts') throw createError({ statusCode: 409, data: { message: 'Удалите SVG через настройки контактов и сохраните изменения.' } })
   if (component === 'Footer') throw createError({ statusCode: 409, data: { message: 'Удалите логотип через настройки футера и сохраните изменения.' } })
   if (component === 'Hero') throw createError({ statusCode: 409, data: { message: 'Удалите изображение через настройки Hero и сохраните изменения.' } })
