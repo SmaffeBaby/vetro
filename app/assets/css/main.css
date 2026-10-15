@@ -1,10 +1,24 @@
 @import "tailwindcss";
-:root { font-family: Arial, sans-serif; color: #213c33; background: #f4f3ec; }
-body { margin: 0; }
-.shell { max-width: 1100px; margin: auto; padding: 12vh 6vw; }
-.eyebrow { font-size: 12px; letter-spacing: .18em; }
-h1 { font-size: clamp(40px, 7vw, 88px); line-height: 1.05; letter-spacing: -.05em; margin: 70px 0 30px; }
-.intro { max-width: 440px; line-height: 1.6; color: #66776c; }
-.status { display: flex; align-items: center; gap: 10px; margin-top: 70px; font-size: 14px; }
-.dot { width: 8px; height: 8px; background: #3a8164; border-radius: 50%; }
-.offline { background: #bb6c35; }
+@import "#vetro/breakpoints.css";
+@import "@nuxt/ui";
+
+@font-face {
+  font-family: Montserrat;
+  src: url('/fonts/Montserrat-Variable.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root { color-scheme: light; background: white; color: #0f172a; }
+body { margin: 0; min-width: 320px; }
+button, a, input, textarea { -webkit-tap-highlight-color: transparent; }
+button:not(:disabled) { cursor: pointer; }
+.site-header { font-family: Montserrat, sans-serif; }
+.site-header a:focus-visible, .site-header button:focus-visible {
+  outline: 2px solid #2a9ccf;
+  outline-offset: 5px;
+}
+.site-header-menu-link { font-size: clamp(14px, 1.041667vw, 20px); line-height: normal; }
+.site-header-nav { column-gap: clamp(14px, 1.5625vw, 30px); }
+.site-header-cta { width: clamp(240px, 14.270834vw, 274px); }

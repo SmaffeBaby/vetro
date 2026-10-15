@@ -15,3 +15,5 @@ supabase/volumes/snippets/
 backups/
 .idea/
 .DS_Store
+
+artifacts/

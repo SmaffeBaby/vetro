@@ -7,8 +7,11 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   app: { head: { title: 'Vetro', htmlAttrs: { lang: 'ru' } } },
   css: ['~/assets/css/main.css'],
-  modules: ['nuxt-security', '@nuxt/content', '@pinia/nuxt', '@nuxtjs/i18n'],
+  modules: ['./modules/breakpoints', '@nuxt/ui', 'nuxt-security', '@nuxt/content', '@pinia/nuxt', '@nuxtjs/i18n'],
   experimental: { appManifest: false },
+  ui: { fonts: false, colorMode: false },
+  icon: { serverBundle: { collections: ['lucide'] } },
+  routeRules: { '/admin': { ssr: false }, '/admin/**': { ssr: false } },
   runtimeConfig: {
     supabaseUrl: 'http://localhost:8002',
     supabaseServiceRoleKey: '',
