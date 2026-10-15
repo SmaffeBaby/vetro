@@ -1,0 +1,10 @@
+@import "tailwindcss";
+:root { font-family: Arial, sans-serif; color: #213c33; background: #f4f3ec; }
+body { margin: 0; }
+.shell { max-width: 1100px; margin: auto; padding: 12vh 6vw; }
+.eyebrow { font-size: 12px; letter-spacing: .18em; }
+h1 { font-size: clamp(40px, 7vw, 88px); line-height: 1.05; letter-spacing: -.05em; margin: 70px 0 30px; }
+.intro { max-width: 440px; line-height: 1.6; color: #66776c; }
+.status { display: flex; align-items: center; gap: 10px; margin-top: 70px; font-size: 14px; }
+.dot { width: 8px; height: 8px; background: #3a8164; border-radius: 50%; }
+.offline { background: #bb6c35; }

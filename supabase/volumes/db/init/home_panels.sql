@@ -1,0 +1,694 @@
+create extension if not exists "pgcrypto";
+
+create table if not exists public.home_panels (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  title_en text,
+  slug text not null,
+  detail_text text not null default '',
+  detail_text_en text,
+  mascot_path text,
+  mascot_url text,
+  sort_order integer not null default 0,
+  gradient_from_color text not null default '#DA2128',
+  gradient_from_opacity numeric(4, 3) not null default 1,
+  gradient_to_color text not null default '#DA2128',
+  gradient_to_opacity numeric(4, 3) not null default 0,
+  gradient_to_position integer not null default 70,
+  image_path text,
+  image_url text,
+  video_path text,
+  video_url text,
+  poster_path text,
+  poster_url text,
+  link_path text not null default '/',
+  tile_type text not null default 'wide',
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint home_panels_tile_type_check check (tile_type in ('wide', 'vertical')),
+  constraint home_panels_gradient_from_color_check check (gradient_from_color ~ '^#[0-9A-Fa-f]{6}$'),
+  constraint home_panels_gradient_to_color_check check (gradient_to_color ~ '^#[0-9A-Fa-f]{6}$'),
+  constraint home_panels_gradient_from_opacity_check check (gradient_from_opacity >= 0 and gradient_from_opacity <= 1),
+  constraint home_panels_gradient_to_opacity_check check (gradient_to_opacity >= 0 and gradient_to_opacity <= 1),
+  constraint home_panels_gradient_to_position_check check (gradient_to_position >= 0 and gradient_to_position <= 100),
+  constraint home_panels_link_path_internal_check check (
+    link_path ~ '^/' and
+    link_path !~ '^//' and
+    link_path !~ '://'
+  )
+);
+
+create unique index if not exists home_panels_slug_unique
+  on public.home_panels (slug);
+
+create or replace function public.set_home_panels_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_home_panels_updated_at on public.home_panels;
+
+create trigger set_home_panels_updated_at
+before update on public.home_panels
+for each row
+execute function public.set_home_panels_updated_at();
+
+alter table public.home_panels enable row level security;
+
+drop policy if exists "Home panels are publicly readable." on public.home_panels;
+create policy "Home panels are publicly readable."
+  on public.home_panels for select
+  using (true);
+
+create table if not exists public.portfolio_cards (
+  id uuid primary key default gen_random_uuid(),
+  panel_id uuid not null references public.home_panels(id) on delete cascade,
+  title text not null,
+  title_en text,
+  slug text not null,
+  sort_order integer not null default 0,
+  gradient_from_color text not null default '#DA2128',
+  gradient_from_opacity numeric(4, 3) not null default 1,
+  gradient_to_color text not null default '#DA2128',
+  gradient_to_opacity numeric(4, 3) not null default 0,
+  gradient_to_position integer not null default 70,
+  image_path text,
+  image_url text,
+  video_path text,
+  video_url text,
+  poster_path text,
+  poster_url text,
+  case_hero_path text,
+  case_hero_url text,
+  tile_type text not null default 'vertical',
+  article_blocks jsonb not null default '[]'::jsonb,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint portfolio_cards_tile_type_check check (tile_type in ('wide', 'vertical')),
+  constraint portfolio_cards_gradient_from_color_check check (gradient_from_color ~ '^#[0-9A-Fa-f]{6}$'),
+  constraint portfolio_cards_gradient_to_color_check check (gradient_to_color ~ '^#[0-9A-Fa-f]{6}$'),
+  constraint portfolio_cards_gradient_from_opacity_check check (gradient_from_opacity >= 0 and gradient_from_opacity <= 1),
+  constraint portfolio_cards_gradient_to_opacity_check check (gradient_to_opacity >= 0 and gradient_to_opacity <= 1),
+  constraint portfolio_cards_gradient_to_position_check check (gradient_to_position >= 0 and gradient_to_position <= 100)
+);
+
+create unique index if not exists portfolio_cards_panel_slug_unique
+  on public.portfolio_cards (panel_id, slug);
+
+create table if not exists public.portfolio_card_article_blocks (
+  id uuid primary key default gen_random_uuid(),
+  card_id uuid not null references public.portfolio_cards(id) on delete cascade,
+  title text not null default '',
+  title_en text,
+  text text not null default '',
+  text_en text,
+  layout text not null default 'single-wide',
+  images jsonb not null default '[]'::jsonb,
+  sort_order integer not null default 0,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint portfolio_card_article_blocks_layout_check
+    check (layout in ('single-wide', 'two-medium', 'three-vertical'))
+);
+
+create index if not exists portfolio_card_article_blocks_card_sort_idx
+  on public.portfolio_card_article_blocks (card_id, sort_order, created_at);
+
+create or replace function public.set_portfolio_cards_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_portfolio_cards_updated_at on public.portfolio_cards;
+
+create trigger set_portfolio_cards_updated_at
+before update on public.portfolio_cards
+for each row
+execute function public.set_portfolio_cards_updated_at();
+
+create or replace function public.set_portfolio_card_article_blocks_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_portfolio_card_article_blocks_updated_at on public.portfolio_card_article_blocks;
+
+create trigger set_portfolio_card_article_blocks_updated_at
+before update on public.portfolio_card_article_blocks
+for each row
+execute function public.set_portfolio_card_article_blocks_updated_at();
+
+alter table public.portfolio_cards enable row level security;
+alter table public.portfolio_card_article_blocks enable row level security;
+
+drop policy if exists "Portfolio cards are publicly readable." on public.portfolio_cards;
+create policy "Portfolio cards are publicly readable."
+  on public.portfolio_cards for select
+  using (true);
+
+drop policy if exists "Portfolio card article blocks are publicly readable." on public.portfolio_card_article_blocks;
+create policy "Portfolio card article blocks are publicly readable."
+  on public.portfolio_card_article_blocks for select
+  using (true);
+
+create table if not exists public.seo_entries (
+  id uuid primary key default gen_random_uuid(),
+  scope text not null default 'page',
+  path text not null,
+  title text not null,
+  title_en text,
+  description text,
+  description_en text,
+  keywords text,
+  keywords_en text,
+  hashtags text,
+  hashtags_en text,
+  og_title text,
+  og_title_en text,
+  og_description text,
+  og_description_en text,
+  og_image_url text,
+  canonical_path text,
+  robots text not null default 'index,follow',
+  priority numeric(2, 1) not null default 0.5,
+  change_frequency text not null default 'weekly',
+  structured_data jsonb,
+  metrics jsonb,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint seo_entries_scope_check check (scope in ('page', 'group', 'case', 'element', 'custom')),
+  constraint seo_entries_path_check check (
+    path ~ '^/' and
+    path !~ '^//' and
+    path !~ '://'
+  ),
+  constraint seo_entries_canonical_path_check check (
+    canonical_path is null or (
+      canonical_path ~ '^/' and
+      canonical_path !~ '^//' and
+      canonical_path !~ '://'
+    )
+  ),
+  constraint seo_entries_priority_check check (priority >= 0 and priority <= 1),
+  constraint seo_entries_change_frequency_check check (
+    change_frequency in ('always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never')
+  )
+);
+
+create unique index if not exists seo_entries_path_unique
+  on public.seo_entries (path);
+
+create or replace function public.set_seo_entries_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_seo_entries_updated_at on public.seo_entries;
+
+create trigger set_seo_entries_updated_at
+before update on public.seo_entries
+for each row
+execute function public.set_seo_entries_updated_at();
+
+alter table public.seo_entries enable row level security;
+
+drop policy if exists "SEO entries are publicly readable." on public.seo_entries;
+create policy "SEO entries are publicly readable."
+  on public.seo_entries for select
+  using (true);
+
+insert into public.seo_entries (
+  scope,
+  path,
+  title,
+  title_en,
+  description,
+  description_en,
+  canonical_path,
+  robots,
+  priority,
+  change_frequency
+)
+values
+  ('page', '/', 'Magnat Professional', 'Magnat Professional', 'Magnat Professional', 'Magnat Professional', '/', 'index,follow', 1, 'weekly'),
+  ('page', '/portfolio', 'Портфолио | Magnat Professional', 'Portfolio | Magnat Professional', 'Портфолио Magnat Professional', 'Magnat Professional portfolio', '/portfolio', 'index,follow', 0.9, 'weekly'),
+  ('page', '/about', 'О нас | Magnat Professional', 'About us | Magnat Professional', 'О компании Magnat Professional', 'About Magnat Professional', '/about', 'index,follow', 0.8, 'monthly'),
+  ('page', '/contacts', 'Контакты | Magnat Professional', 'Contacts | Magnat Professional', 'Контакты Magnat Professional', 'Magnat Professional contacts', '/contacts', 'index,follow', 0.8, 'monthly'),
+  ('page', '/privacy', 'Политика обработки персональных данных | Magnat Professional', 'Privacy policy | Magnat Professional', 'Политика обработки персональных данных Magnat Professional', 'Magnat Professional privacy policy', '/privacy', 'index,follow', 0.3, 'yearly'),
+  ('page', '/user-agreement', 'Пользовательское соглашение | Magnat Professional', 'User agreement | Magnat Professional', 'Пользовательское соглашение Magnat Professional', 'Magnat Professional user agreement', '/user-agreement', 'index,follow', 0.3, 'yearly'),
+  ('page', '/policy', 'Политика | Magnat Professional', 'Policy | Magnat Professional', 'Политика Magnat Professional', 'Magnat Professional policy', '/policy', 'index,follow', 0.3, 'yearly')
+on conflict (path) do nothing;
+
+create table if not exists public.about_us_content (
+  id boolean primary key default true,
+  text text not null default '',
+  text_en text,
+  button_text text not null default '',
+  button_text_en text,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint about_us_content_singleton_check check (id)
+);
+
+insert into public.about_us_content (id, text, text_en, button_text, button_text_en)
+values (true, '', null, '', null)
+on conflict (id) do nothing;
+
+create or replace function public.set_about_us_content_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_about_us_content_updated_at on public.about_us_content;
+
+create trigger set_about_us_content_updated_at
+before update on public.about_us_content
+for each row
+execute function public.set_about_us_content_updated_at();
+
+alter table public.about_us_content enable row level security;
+
+drop policy if exists "About us content is publicly readable." on public.about_us_content;
+create policy "About us content is publicly readable."
+  on public.about_us_content for select
+  using (true);
+
+create table if not exists public.description_content (
+  id boolean primary key default true,
+  text text not null default '',
+  text_en text,
+  card_text text not null default '',
+  card_text_en text,
+  desktop_plaque_path text,
+  desktop_plaque_url text,
+  tablet_plaque_path text,
+  tablet_plaque_url text,
+  mobile_plaque_path text,
+  mobile_plaque_url text,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint description_content_singleton_check check (id)
+);
+
+insert into public.description_content (
+  id,
+  text,
+  text_en,
+  card_text,
+  card_text_en,
+  desktop_plaque_path,
+  desktop_plaque_url,
+  tablet_plaque_path,
+  tablet_plaque_url,
+  mobile_plaque_path,
+  mobile_plaque_url
+)
+values (true, '', null, '', null, null, null, null, null, null, null)
+on conflict (id) do nothing;
+
+create or replace function public.set_description_content_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_description_content_updated_at on public.description_content;
+
+create trigger set_description_content_updated_at
+before update on public.description_content
+for each row
+execute function public.set_description_content_updated_at();
+
+alter table public.description_content enable row level security;
+
+drop policy if exists "Description content is publicly readable." on public.description_content;
+create policy "Description content is publicly readable."
+  on public.description_content for select
+  using (true);
+
+create table if not exists public.stats_items (
+  id uuid primary key default gen_random_uuid(),
+  number_text text not null,
+  sort_order integer not null default 0,
+  text text not null,
+  text_en text,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
+);
+
+create or replace function public.set_stats_items_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_stats_items_updated_at on public.stats_items;
+
+create trigger set_stats_items_updated_at
+before update on public.stats_items
+for each row
+execute function public.set_stats_items_updated_at();
+
+alter table public.stats_items enable row level security;
+
+drop policy if exists "Stats items are publicly readable." on public.stats_items;
+create policy "Stats items are publicly readable."
+  on public.stats_items for select
+  using (true);
+
+create table if not exists public.director_text_content (
+  id boolean primary key default true,
+  text text not null default '',
+  text_en text,
+  photo_path text,
+  photo_url text,
+  thumbnail_path text,
+  thumbnail_url text,
+  name text not null default '',
+  name_en text,
+  position text not null default '',
+  position_en text,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint director_text_content_singleton_check check (id)
+);
+
+insert into public.director_text_content (
+  id,
+  text,
+  text_en,
+  photo_path,
+  photo_url,
+  thumbnail_path,
+  thumbnail_url,
+  name,
+  name_en,
+  position,
+  position_en
+)
+values (true, '', null, null, null, null, null, '', null, '', null)
+on conflict (id) do nothing;
+
+create or replace function public.set_director_text_content_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_director_text_content_updated_at on public.director_text_content;
+
+create trigger set_director_text_content_updated_at
+before update on public.director_text_content
+for each row
+execute function public.set_director_text_content_updated_at();
+
+alter table public.director_text_content enable row level security;
+
+drop policy if exists "Director text content is publicly readable." on public.director_text_content;
+create policy "Director text content is publicly readable."
+  on public.director_text_content for select
+  using (true);
+
+create table if not exists public.hystory_company_items (
+  id uuid primary key default gen_random_uuid(),
+  year text not null,
+  sort_order integer not null default 0,
+  title text not null,
+  title_en text,
+  text text not null,
+  text_en text,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
+);
+
+create or replace function public.set_hystory_company_items_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_hystory_company_items_updated_at on public.hystory_company_items;
+
+create trigger set_hystory_company_items_updated_at
+before update on public.hystory_company_items
+for each row
+execute function public.set_hystory_company_items_updated_at();
+
+alter table public.hystory_company_items enable row level security;
+
+drop policy if exists "Hystory company items are publicly readable." on public.hystory_company_items;
+create policy "Hystory company items are publicly readable."
+  on public.hystory_company_items for select
+  using (true);
+
+create table if not exists public.privacy_blocks (
+  id uuid primary key default gen_random_uuid(),
+  document_key text not null default 'privacy',
+  block_type text not null default 'text',
+  sort_order integer not null default 0,
+  title text not null,
+  title_en text,
+  text text not null default '',
+  text_en text,
+  table_rows jsonb not null default '[]'::jsonb,
+  table_rows_en jsonb not null default '[]'::jsonb,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint privacy_blocks_document_key_check check (document_key in ('privacy', 'user-agreement', 'policy')),
+  constraint privacy_blocks_type_check check (block_type in ('text', 'table'))
+);
+
+alter table if exists public.privacy_blocks
+  add column if not exists document_key text not null default 'privacy';
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'privacy_blocks_document_key_check'
+  ) then
+    alter table public.privacy_blocks
+      add constraint privacy_blocks_document_key_check
+      check (document_key in ('privacy', 'user-agreement', 'policy'));
+  end if;
+end;
+$$;
+
+create index if not exists privacy_blocks_document_sort_idx
+  on public.privacy_blocks (document_key, sort_order, created_at);
+
+create or replace function public.set_privacy_blocks_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_privacy_blocks_updated_at on public.privacy_blocks;
+
+create trigger set_privacy_blocks_updated_at
+before update on public.privacy_blocks
+for each row
+execute function public.set_privacy_blocks_updated_at();
+
+alter table public.privacy_blocks enable row level security;
+
+drop policy if exists "Privacy blocks are publicly readable." on public.privacy_blocks;
+create policy "Privacy blocks are publicly readable."
+  on public.privacy_blocks for select
+  using (true);
+
+create table if not exists public.mission_values_content (
+  id boolean primary key default true,
+  main_text text not null default '',
+  main_text_en text,
+  main_text_html text not null default '',
+  main_text_html_en text,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint mission_values_content_singleton_check check (id)
+);
+
+insert into public.mission_values_content (
+  id,
+  main_text,
+  main_text_en,
+  main_text_html,
+  main_text_html_en
+)
+values (true, '', null, '', null)
+on conflict (id) do nothing;
+
+create or replace function public.set_mission_values_content_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_mission_values_content_updated_at on public.mission_values_content;
+
+create trigger set_mission_values_content_updated_at
+before update on public.mission_values_content
+for each row
+execute function public.set_mission_values_content_updated_at();
+
+alter table public.mission_values_content enable row level security;
+
+drop policy if exists "Mission values content is publicly readable." on public.mission_values_content;
+create policy "Mission values content is publicly readable."
+  on public.mission_values_content for select
+  using (true);
+
+create table if not exists public.mission_values_cards (
+  id uuid primary key default gen_random_uuid(),
+  sort_order integer not null default 0,
+  title text not null,
+  title_en text,
+  text text not null,
+  text_en text,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
+);
+
+create or replace function public.set_mission_values_cards_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_mission_values_cards_updated_at on public.mission_values_cards;
+
+create trigger set_mission_values_cards_updated_at
+before update on public.mission_values_cards
+for each row
+execute function public.set_mission_values_cards_updated_at();
+
+alter table public.mission_values_cards enable row level security;
+
+drop policy if exists "Mission values cards are publicly readable." on public.mission_values_cards;
+create policy "Mission values cards are publicly readable."
+  on public.mission_values_cards for select
+  using (true);
+
+create table if not exists public.clients_items (
+  id uuid primary key default gen_random_uuid(),
+  sort_order integer not null default 0,
+  image_path text,
+  image_url text not null,
+  link_url text,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
+);
+
+create or replace function public.set_clients_items_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_clients_items_updated_at on public.clients_items;
+
+create trigger set_clients_items_updated_at
+before update on public.clients_items
+for each row
+execute function public.set_clients_items_updated_at();
+
+alter table public.clients_items enable row level security;
+
+drop policy if exists "Clients items are publicly readable." on public.clients_items;
+create policy "Clients items are publicly readable."
+  on public.clients_items for select
+  using (true);
+
+create table if not exists public.project_requests (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  phone text not null default '',
+  email text not null default '',
+  message text not null default '',
+  status text not null default 'new',
+  source text not null default 'project-form',
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint project_requests_status_check check (status in ('new', 'in_progress', 'closed')),
+  constraint project_requests_contact_check check (phone <> '' or email <> '')
+);
+
+create index if not exists project_requests_status_created_idx
+  on public.project_requests (status, created_at desc);
+
+create or replace function public.set_project_requests_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_project_requests_updated_at on public.project_requests;
+
+create trigger set_project_requests_updated_at
+before update on public.project_requests
+for each row
+execute function public.set_project_requests_updated_at();
+
+alter table public.project_requests enable row level security;

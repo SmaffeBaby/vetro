@@ -1,0 +1,41 @@
+{
+  "name": "vetro",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --host 0.0.0.0 --port 3002",
+    "dev:local": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "NITRO_HOST=0.0.0.0 NITRO_PORT=3002 nuxt preview",
+    "postinstall": "nuxt prepare",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
+  },
+  "dependencies": {
+    "@nuxt/content": "3.16.2",
+    "@nuxtjs/i18n": "10.6.0",
+    "@pinia/nuxt": "1.0.3",
+    "@supabase/supabase-js": "2.117.3",
+    "nodemailer": "10.1.1",
+    "nuxt": "4.6.1",
+    "nuxt-security": "2.6.0",
+    "pinia": "4.1.0",
+    "vue": "3.5.44",
+    "vue-router": "5.4.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "engines": {
+    "node": "^24.15.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "tailwindcss": "4.3.3",
+    "@types/nodemailer": "8.0.2",
+    "@types/node": "^24.0.0",
+    "typescript": "7.0.2",
+    "vite": "8.3.4",
+    "esbuild": "0.28.2"
+  }
+}
