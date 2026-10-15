@@ -74,6 +74,8 @@ export function useAdminHeader() {
   function warnUnsaved(event: BeforeUnloadEvent) { if (isDirty.value && !loading.value) { event.preventDefault(); event.returnValue = '' } }
   onMounted(() => { void load(); window.addEventListener('beforeunload', warnUnsaved) })
   onBeforeUnmount(() => window.removeEventListener('beforeunload', warnUnsaved))
-  onBeforeRouteLeave(() => !isDirty.value || window.confirm('Есть несохранённые изменения. Покинуть страницу?'))
+  const confirmLeave = () => !isDirty.value || window.confirm('Есть несохранённые изменения. Покинуть страницу?')
+  onBeforeRouteLeave(confirmLeave)
+  onBeforeRouteUpdate((to, from) => to.query.section === from.query.section || confirmLeave())
   return { form, loading, saving, error, notice, isDirty, logoPreview, updatedLabel, save, load, discard, addItem, removeItem, moveItem, uploadLogo, removeLogo }
 }
