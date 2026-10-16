@@ -31,7 +31,7 @@ export function useAdminServicesWhyUs() {
   }
   function addCard() {
     if (saving.value || form.cards.length >= 12) return
-    form.cards.push({ id: `step-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, title: '', caption: '', description: '' })
+    form.cards.push({ id: `step-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, description: '' })
   }
   function removeCard(index: number) { if (!saving.value) form.cards.splice(index, 1) }
   function moveCard(index: number, delta: number) {

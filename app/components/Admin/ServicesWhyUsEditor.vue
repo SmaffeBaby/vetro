@@ -14,14 +14,12 @@ const { form, loading, saving, loaded, error, notice, isDirty, updatedLabel, loa
       <UAlert v-if="notice" color="success" variant="soft" :description="notice" role="status" />
       <form v-if="loaded" id="services-why-us-settings" @submit.prevent="save">
         <fieldset :disabled="saving" class="space-y-6">
-          <UCard><UFormField label="Заглавный заголовок"><UTextarea v-model="form.title" :rows="2" maxlength="240" class="w-full" /></UFormField></UCard>
-          <p class="text-sm text-slate-500">{{ form.cards.length }} / 12 карточек</p>
+          <UCard><UFormField label="Заголовок блока"><UTextarea v-model="form.title" :rows="2" maxlength="240" class="w-full" /></UFormField></UCard>
+          <p class="text-sm text-slate-500">{{ form.cards.length }} / 12 карточек · номера 01, 02… присваиваются автоматически</p>
           <UCard v-for="(card, index) in form.cards" :key="card.id">
             <template #header><div class="flex flex-wrap items-center justify-between gap-3"><h2 class="font-semibold">Карточка {{ index + 1 }}</h2><div class="flex gap-1"><UButton icon="i-lucide-arrow-up" :aria-label="`Поднять карточку ${index + 1}`" color="neutral" variant="ghost" :disabled="index === 0" @click="moveCard(index, -1)" /><UButton icon="i-lucide-arrow-down" :aria-label="`Опустить карточку ${index + 1}`" color="neutral" variant="ghost" :disabled="index === form.cards.length - 1" @click="moveCard(index, 1)" /><UButton icon="i-lucide-trash-2" :aria-label="`Удалить карточку ${index + 1}`" color="error" variant="ghost" @click="removeCard(index)" /></div></div></template>
             <div class="space-y-5">
-              <UFormField :label="`Заголовок карточки ${index + 1}`"><UTextarea v-model="card.title" :rows="2" maxlength="160" class="w-full" /></UFormField>
-              <UFormField :label="`Пояснение карточки ${index + 1}`"><UTextarea v-model="card.caption" :rows="2" maxlength="240" class="w-full" /></UFormField>
-              <UFormField :label="`Описание карточки ${index + 1}`"><UTextarea v-model="card.description" :rows="4" maxlength="3000" class="w-full" /></UFormField>
+              <UFormField :label="`Текст карточки ${index + 1}`"><UTextarea v-model="card.description" :rows="4" maxlength="4000" class="w-full" /></UFormField>
             </div>
           </UCard>
           <p v-if="!form.cards.length" class="rounded-xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500">Карточек пока нет. Пустой блок не отображается на сайте.</p>

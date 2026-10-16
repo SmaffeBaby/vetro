@@ -6,11 +6,9 @@ const { data: content } = await useFetch<ServicesWhyUsSettings>('/api/services-w
 
 <template>
   <section v-if="content.cards.length" aria-labelledby="services-why-us-title" class="mx-auto max-w-480 px-5 pb-16 text-[#203e63] tablet:px-8 tablet:pb-24 desktop:px-[4.95%] desktop:pb-32">
-    <div class="rounded-[28px] bg-white px-6 py-10 tablet:rounded-[40px] tablet:p-10 desktop:px-12 desktop:py-14">
-      <h2 id="services-why-us-title" class="whitespace-pre-line break-words text-3xl font-bold leading-[1.12] tablet:text-[42px] desktop:text-[60px]">{{ content.title }}</h2>
-      <div class="mt-10 grid grid-cols-1 gap-10 tablet:mt-16 tablet:grid-cols-2 tablet:gap-10 desktop:mt-24 desktop:grid-cols-4 desktop:gap-12">
-        <ServicesDetailServicesWhyUsCard v-for="card in content.cards" :key="card.id" :card="card" />
-      </div>
-    </div>
+    <h2 id="services-why-us-title" class="whitespace-pre-line break-words text-[32px] font-bold leading-[1.1] tablet:text-[40px] desktop:text-[clamp(40px,2.9167vw,56px)]">{{ content.title }}</h2>
+    <ol class="mt-10 grid list-none grid-cols-1 gap-5 tablet:mt-14 tablet:grid-cols-2">
+      <ServicesDetailServicesWhyUsCard v-for="(card, index) in content.cards" :key="card.id" :card="card" :number="index + 1" />
+    </ol>
   </section>
 </template>
