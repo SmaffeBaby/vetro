@@ -13,7 +13,7 @@ const { identity, checking, logout, section, sectionTitle, navigation } = useAdm
     </UDashboardSidebar>
     <UDashboardPanel :id="section">
       <template #header><UDashboardNavbar :title="sectionTitle"><template #leading><UDashboardSidebarCollapse /></template><template #right><UButton to="/" target="_blank" icon="i-lucide-external-link" label="Открыть сайт" color="neutral" variant="outline" size="sm" /></template></UDashboardNavbar></template>
-      <template #body><AdminHowWorkEditor v-if="section === 'how-work'" /><AdminLicenseEditor v-else-if="section === 'license'" /><AdminCostsEditor v-else-if="section === 'costs'" /><AdminFaqEditor v-else-if="section === 'faq'" /><AdminContactsEditor v-else-if="section === 'contacts'" /><AdminFooterEditor v-else-if="section === 'footer'" /><AdminAboutCardEditor v-else-if="section === 'about-card'" /><AdminSkillsEditor v-else-if="section === 'skills'" /><AdminHeroEditor v-else-if="section === 'hero'" /><AdminHeaderEditor v-else /></template>
+      <template #body><AdminWhyEditor v-if="section === 'why'" /><AdminHowWorkEditor v-else-if="section === 'how-work'" /><AdminLicenseEditor v-else-if="section === 'license'" /><AdminCostsEditor v-else-if="section === 'costs'" /><AdminFaqEditor v-else-if="section === 'faq'" /><AdminContactsEditor v-else-if="section === 'contacts'" /><AdminFooterEditor v-else-if="section === 'footer'" /><AdminAboutCardEditor v-else-if="section === 'about-card'" /><AdminSkillsEditor v-else-if="section === 'skills'" /><AdminHeroEditor v-else-if="section === 'hero'" /><AdminHeaderEditor v-else /></template>
     </UDashboardPanel>
   </UDashboardGroup>
 </template>

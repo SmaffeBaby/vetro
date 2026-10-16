@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
   }
   // Published header objects are owned and removed by the header save workflow.
   if (component === 'License') throw createError({ statusCode: 409, data: { message: 'Удалите фото через настройки лицензии и сохраните изменения.' } })
+  if (component === 'Why') throw createError({ statusCode: 409, data: { message: 'Удалите SVG через настройки «Почему мы» и сохраните изменения.' } })
   if (component === 'FAQ') throw createError({ statusCode: 409, data: { message: 'Удалите SVG через настройки вопросов и сохраните изменения.' } })
   if (component === 'Contacts') throw createError({ statusCode: 409, data: { message: 'Удалите SVG через настройки контактов и сохраните изменения.' } })
   if (component === 'Footer') throw createError({ statusCode: 409, data: { message: 'Удалите логотип через настройки футера и сохраните изменения.' } })
