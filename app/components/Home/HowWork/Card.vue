@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WorkCard } from '#shared/types/how-work'
+import type { WorkCard } from '#shared/types/how-work.ts'
 defineProps<{ card: WorkCard; number: number; active: boolean }>()
 const emit = defineEmits<{ select: [] }>()
 </script>
@@ -14,7 +14,7 @@ const emit = defineEmits<{ select: [] }>()
 </template>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "../../../assets/css/main.css";
 .work-card { --counter: clamp(40px, 2.916667vw, 56px); --card-gap: clamp(12px, 1.25vw, 24px); padding: clamp(20px, 1.458333vw, 28px); border-radius: 12px; cursor: pointer; transition: flex-grow 420ms ease, box-shadow 300ms ease; }
 .work-card[data-active="true"] { box-shadow: 0 0 0 2px #ededed; }
 .work-trigger { gap: var(--card-gap); }

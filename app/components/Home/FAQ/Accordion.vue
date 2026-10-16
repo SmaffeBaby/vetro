@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FaqQuestion } from '#shared/types/faq'
+import type { FaqQuestion } from '#shared/types/faq.ts'
 defineProps<{ questions: FaqQuestion[] }>()
 </script>
 

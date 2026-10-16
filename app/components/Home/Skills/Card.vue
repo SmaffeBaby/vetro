@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SkillCard } from '#shared/types/skills'
+import type { SkillCard } from '#shared/types/skills.ts'
 const props = defineProps<{ card: SkillCard; active: boolean }>()
 const icon = useSkillIcon(() => props.card)
 </script>
@@ -15,7 +15,7 @@ const icon = useSkillIcon(() => props.card)
 </template>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "../../../assets/css/main.css";
 
 .skill-card { transition: flex-grow 420ms ease, border-color 250ms ease; }
 .skill-card-title { overflow-wrap: anywhere; hyphens: manual; }

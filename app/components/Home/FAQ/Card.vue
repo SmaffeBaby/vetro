@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { FaqBenefit } from '#shared/types/faq'
-import { mediaUrl } from '#shared/utils/media'
+import type { FaqBenefit } from '#shared/types/faq.ts'
+import { mediaUrl } from '#shared/utils/media.ts'
 defineProps<{ benefits: FaqBenefit[] }>()
 const iconSrc = (item: FaqBenefit) => item.iconPath ? mediaUrl(item.iconPath) : `data:image/svg+xml;charset=utf-8,${encodeURIComponent(item.svg)}`
 </script>

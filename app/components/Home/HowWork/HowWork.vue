@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { sortWorkCards } from '#shared/utils/how-work'
+import { sortWorkCards } from '#shared/utils/how-work.ts'
 const { data: work } = await useHowWork()
 const cards = computed(() => sortWorkCards(work.value.cards))
 </script>

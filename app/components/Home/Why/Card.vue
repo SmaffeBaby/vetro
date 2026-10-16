@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { WhyCard } from '#shared/types/why'
-import { mediaUrl } from '#shared/utils/media'
+import type { WhyCard } from '#shared/types/why.ts'
+import { mediaUrl } from '#shared/utils/media.ts'
 defineProps<{ card: WhyCard; active: boolean }>()
 const emit = defineEmits<{ select: [] }>()
 const iconSrc = (card: WhyCard) => card.iconPath ? mediaUrl(card.iconPath) : `data:image/svg+xml;charset=utf-8,${encodeURIComponent(card.svg)}`
@@ -20,7 +20,7 @@ const iconSrc = (card: WhyCard) => card.iconPath ? mediaUrl(card.iconPath) : `da
 </template>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "../../../assets/css/main.css";
 .why-card { --icon: 54px; --gap: 22px; position: relative; cursor: pointer; padding: 24px 0; transition: flex-grow 420ms ease; }
 .why-trigger { display: grid; grid-template-columns: var(--icon) minmax(0, 1fr); gap: var(--gap); align-items: start; }
 .why-icon { width: var(--icon); height: var(--icon); }

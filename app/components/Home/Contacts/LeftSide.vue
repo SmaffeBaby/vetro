@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ContactItem } from '#shared/types/contacts'
-import { mediaUrl } from '#shared/utils/media'
+import type { ContactItem } from '#shared/types/contacts.ts'
+import { mediaUrl } from '#shared/utils/media.ts'
 defineProps<{ items: ContactItem[] }>()
 const year = useFooterYear()
 const emit = defineEmits<{ request: [] }>()

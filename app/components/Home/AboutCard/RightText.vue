@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AboutCardRightItem } from '#shared/types/about-card'
+import type { AboutCardRightItem } from '#shared/types/about-card.ts'
 defineProps<{ items: AboutCardRightItem[] }>()
 </script>
 

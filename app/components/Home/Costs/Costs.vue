@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { CostSelection } from '#shared/types/costs'
-import { selectedCostValues } from '#shared/utils/costs'
+import type { CostSelection } from '#shared/types/costs.ts'
+import { selectedCostValues } from '#shared/utils/costs.ts'
 const { data: costs } = await useCosts()
 const { data: contacts } = await useContacts()
 const values = reactive<Record<string, string>>({})

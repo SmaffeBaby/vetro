@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SkillCard } from '#shared/types/skills'
+import type { SkillCard } from '#shared/types/skills.ts'
 const props = defineProps<{ cards: SkillCard[] }>()
 const rows = useSkillRows(() => props.cards)
 const { activeId, hovered, focused, focusCard } = useSkillDisclosure(() => props.cards)

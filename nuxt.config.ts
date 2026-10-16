@@ -4,6 +4,10 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-10-15',
   srcDir: 'app/',
   serverDir: 'server/',
+  components: [
+    { path: '~/components/Home' },
+    { path: '~/components', ignore: ['Home/**'] }
+  ],
   devtools: { enabled: false },
   app: { head: { title: 'Vetro', htmlAttrs: { lang: 'ru' } } },
   css: ['~/assets/css/main.css'],

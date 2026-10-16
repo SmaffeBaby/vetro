@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mediaUrl } from '#shared/utils/media'
+import { mediaUrl } from '#shared/utils/media.ts'
 defineProps<{ path: string; alt: string }>()
 </script>
 

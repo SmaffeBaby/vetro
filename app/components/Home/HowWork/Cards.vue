@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WorkCard } from '#shared/types/how-work'
+import type { WorkCard } from '#shared/types/how-work.ts'
 const props = defineProps<{ cards: WorkCard[] }>()
 const activeId = ref<string | null>(null)
 watch(() => props.cards.map(card => card.id), ids => {

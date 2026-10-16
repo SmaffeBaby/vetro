@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { sortWhyCards } from '#shared/utils/why'
+import { sortWhyCards } from '#shared/utils/why.ts'
 const { data: why } = await useWhy()
 const cards = computed(() => sortWhyCards(why.value.cards))
 </script>

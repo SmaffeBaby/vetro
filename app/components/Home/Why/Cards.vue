@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WhyCard } from '#shared/types/why'
+import type { WhyCard } from '#shared/types/why.ts'
 const props = defineProps<{ cards: WhyCard[] }>()
 const activeId = ref<string | null>(null)
 watch(() => props.cards.map(card => card.id), ids => {
