@@ -1,0 +1,12 @@
+<script setup lang="ts">
+import type { ServicesTeamSettings } from '#shared/types/services-team'
+import { defaultServicesTeam } from '#shared/config/default-services-team'
+import { sortTeamCards } from '#shared/utils/services-team'
+const { data: team } = await useFetch<ServicesTeamSettings>('/api/services-team', { key: 'site-services-team', default: () => structuredClone(defaultServicesTeam) })
+const cards = computed(() => sortTeamCards(team.value.cards))
+</script>
+<template>
+ <section v-if="cards.length" aria-labelledby="services-team-title" class="mx-auto min-w-0 max-w-480 px-5 pb-16 text-[#203e63] tablet:px-8 tablet:pb-24 desktop:px-[4.95%] desktop:pb-32">
+  <SharedCardSlider :items="cards" :title="team.title" :description="team.description" region-id="services-team-title" item-class="basis-[85%] ps-5 tablet:basis-1/2 desktop:basis-1/4" previous-label="Предыдущие сотрудники" next-label="Следующие сотрудники"><template #default="{item}"><ServicesTeamSliderCard :card="item" /></template></SharedCardSlider>
+ </section>
+</template>

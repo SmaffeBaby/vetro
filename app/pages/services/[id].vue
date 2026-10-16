@@ -13,7 +13,7 @@ useHead({ title: () => `${detail.value?.title} · Ветро`, meta: [{ name: 'd
 <template>
   <div class="service-detail-page min-h-screen bg-[#f7f8fa] text-[#203e63]">
     <Header @request="navigateTo('/#contacts')" />
-    <main><ServicesDetailServices v-if="detail" :detail="detail" @request="navigateTo('/#contacts')" /><ServicesDetailServicesWhyUs /><ServicesDetailServicesPriceList :current-service-id="id" @request="navigateTo('/#contacts')" /><ServicesDetailServicesRequestCard :current-service-id="id" @request="navigateTo('/#contacts')" /><ServicesDetailServicesOtherServices :current-service-id="id" /></main>
+    <main><ServicesDetailServices v-if="detail" :detail="detail" @request="navigateTo('/#contacts')" /><ServicesTeamSlider /><ServicesDetailServicesWhyUs /><ServicesDetailServicesPriceList :current-service-id="id" @request="navigateTo('/#contacts')" /><ServicesDetailServicesRequestCard :current-service-id="id" @request="navigateTo('/#contacts')" /><ServicesDetailServicesOtherServices :current-service-id="id" /></main>
     <Footer @request="navigateTo('/#contacts')" />
   </div>
 </template>
