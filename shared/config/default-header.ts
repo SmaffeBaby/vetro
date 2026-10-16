@@ -6,7 +6,7 @@ export const defaultHeader: HeaderSettings = {
     {
       "id": "services",
       "label": "Наши услуги",
-      "href": "/#services"
+      "href": "/services"
     },
     {
       "id": "projects",

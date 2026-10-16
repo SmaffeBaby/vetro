@@ -1,6 +1,6 @@
 import { MEDIA_MAX_BYTES, mediaTypes, isMediaComponent, mediaUrl } from '#shared/utils/media'
 
-/** Media/[component]/[filename]. Save ownership in the component's settings before removing its previous file. */
+/** Media/[page]/[component]/[filename]. Save ownership in the component's settings before removing its previous file. */
 export function useMedia(component: string) {
   if (!isMediaComponent(component)) throw new Error('Некорректное имя компонента Media')
   const { adminFetch } = useAdminAuth()

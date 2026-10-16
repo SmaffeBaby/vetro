@@ -15,7 +15,17 @@ export default defineNuxtConfig({
   experimental: { appManifest: false },
   ui: { fonts: false, colorMode: false },
   icon: { serverBundle: { collections: ['lucide'] } },
-  routeRules: { '/admin': { ssr: false }, '/admin/**': { ssr: false } },
+  routeRules: {
+    '/admin': { ssr: false },
+    '/admin/**': { ssr: false },
+    // Public assets must not spend the page/API request budget.
+    '/_nuxt/**': { security: { rateLimiter: false } },
+    '/images/**': { security: { rateLimiter: false } },
+    '/fonts/**': { security: { rateLimiter: false } },
+    '/supabase/storage/v1/object/public/**': { security: { rateLimiter: false } },
+    '/api/**': { security: { rateLimiter: { tokensPerInterval: 120, interval: 300000 } } },
+    '/supabase/auth/v1/**': { security: { rateLimiter: { tokensPerInterval: 120, interval: 300000 } } }
+  },
   runtimeConfig: {
     supabaseUrl: 'http://localhost:8002',
     supabaseServiceRoleKey: '',

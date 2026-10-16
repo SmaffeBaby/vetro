@@ -9,7 +9,7 @@ const emit = defineEmits<{ request: [] }>()
       <HeroTitle :title="hero.title" :accent-title="hero.accentTitle" :text="hero.text" :regalia="hero.regalia" />
       <div class="mt-9 flex flex-wrap gap-4 tablet:mt-14 tablet:gap-9">
         <HeroButton :label="hero.primaryButtonLabel" @click="emit('request')" />
-        <HeroButton :label="hero.secondaryButtonLabel" secondary href="/#services" />
+        <HeroButton :label="hero.secondaryButtonLabel" secondary href="/services" />
       </div>
     </div>
     <HeroImage v-if="hero.imagePath" :path="hero.imagePath" alt="Инженерные системы здания" />

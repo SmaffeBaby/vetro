@@ -5,14 +5,22 @@ export const mediaTypes: Record<string, string> = {
   'image/webp': 'webp', 'image/gif': 'gif', 'image/avif': 'avif'
 }
 
+const componentName = /^[A-Za-z][A-Za-z0-9_-]{0,79}$/
+const homeComponents = new Set(['Hero', 'Skills', 'AboutCard', 'Why', 'HowWork', 'License', 'Costs', 'FAQ', 'Contacts'])
 export function isMediaComponent(value: string): boolean {
-  return /^[A-Za-z][A-Za-z0-9_-]{0,79}$/.test(value)
+  const parts = value.split('/')
+  return parts.length === 1 ? componentName.test(value) : parts.length === 2 && ['Home', 'Services'].includes(parts[0]!) && componentName.test(parts[1]!)
+}
+
+/** Legacy component names still resolve to their page directory. Header and Footer are shared. */
+export function mediaDirectory(component: string): string {
+  return homeComponents.has(component) ? `Home/${component}` : component
 }
 
 export function isMediaPath(value: string): boolean {
   const parts = value.split('/')
-  return parts.length === 2 && isMediaComponent(parts[0]!)
-    && /^[\p{L}\p{N}_-][\p{L}\p{N}_.-]{0,239}$/u.test(parts[1]!)
+  return (parts.length === 2 || parts.length === 3) && isMediaComponent(parts.slice(0, -1).join('/'))
+    && /^[\p{L}\p{N}_-][\p{L}\p{N}_.-]{0,239}$/u.test(parts.at(-1)!)
 }
 
 export function mediaFilename(name: string, extension: string): string {

@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { MEDIA_BUCKET, MEDIA_MAX_BYTES, mediaTypes, isMediaComponent, isMediaPath, mediaFilename } from '../../shared/utils/media'
+import { MEDIA_BUCKET, MEDIA_MAX_BYTES, mediaTypes, isMediaComponent, isMediaPath, mediaFilename, mediaDirectory } from '../../shared/utils/media'
 import { validateLogoSvg } from './svg'
 
 export async function uploadMedia(client: SupabaseClient, component: string, name: string, type: string, body: Buffer) {
@@ -17,7 +17,7 @@ export async function uploadMedia(client: SupabaseClient, component: string, nam
   }
   const filename = mediaFilename(name, mediaTypes[type]!)
   // Each revision gets its own object: concurrent saves never overwrite the published file.
-  const path = `${component}/${filename.replace(/\.[^.]+$/, '')}-${randomUUID()}.${mediaTypes[type]}`
+  const path = `${mediaDirectory(component)}/${filename.replace(/\.[^.]+$/, '')}-${randomUUID()}.${mediaTypes[type]}`
   const { error } = await client.storage.from(MEDIA_BUCKET).upload(path, body, { contentType: type, upsert: false, cacheControl: '31536000' })
   if (error) throw createError({ statusCode: 502, data: { message: 'Не удалось загрузить файл в Storage. Проверьте bucket Media.' } })
   return { path, filename }
