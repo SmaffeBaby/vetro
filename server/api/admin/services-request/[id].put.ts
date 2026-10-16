@@ -1,0 +1,68 @@
+import { serviceRequestInputSchema } from '../../../../shared/utils/services-request'
+
+export default defineEventHandler(async (event) => {
+  const { client } = await requireSiteAdmin(event)
+  const card = await requireServiceCard(client, getRouterParam(event, 'id'))
+  const parsed = serviceRequestInputSchema.safeParse(await readBody(event))
+  if (!parsed.success) {
+    throw createError({ statusCode: 400, statusMessage: 'Invalid Service request settings', data: { message: parsed.error.issues[0]?.message } })
+  }
+  let svg = ''
+  try { svg = parsed.data.svg ? validateLogoSvg(parsed.data.svg) : '' } catch (error) {
+    throw createError({ statusCode: 400, statusMessage: 'Invalid SVG', data: { message: (error as Error).message } })
+  }
+  const conflict = () => createError({ statusCode: 409, statusMessage: 'Settings changed', data: { message: 'Настройки уже изменились. Загрузите актуальную версию перед сохранением.' } })
+  const { data: previous, error: readError } = await client.from('site_services_request').select('*').eq('service_id', card.id).maybeSingle()
+  if (readError) throw createError({ statusCode: 503, statusMessage: 'Service request settings unavailable' })
+  if (Number(previous?.revision ?? 0) !== parsed.data.revision) throw conflict()
+
+  let path: string | null = previous?.image_path ?? null
+  let filename = parsed.data.filename || previous?.filename || 'logo.svg'
+  const changed = svg !== previous?.svg || filename !== previous?.filename || (!!svg && !path)
+  let uploaded: string | null = null
+  if (changed) {
+    if (svg) {
+      const media = await uploadMedia(client, 'Services/DetailServices/RequestCard', filename, 'image/svg+xml', Buffer.from(svg))
+      path = uploaded = media.path
+      filename = media.filename
+    } else { path = null; filename = 'logo.svg' }
+  }
+  const cleanup: string[] = [...new Set<string>([
+    ...((previous?.media_cleanup_paths ?? []) as string[]),
+    ...(previous?.image_path && path !== previous?.image_path ? [previous?.image_path as string] : [])
+  ])]
+  const settings = {
+    svg,
+    image_path: path,
+    filename,
+    media_cleanup_paths: cleanup,
+    title: parsed.data.title,
+    description: parsed.data.description,
+    note: parsed.data.note,
+    button_label: parsed.data.buttonLabel,
+    revision: parsed.data.revision + 1,
+    updated_at: new Date().toISOString()
+  }
+  const { data, error } = previous
+    ? await client.from('site_services_request').update(settings).eq('service_id', card.id).eq('revision', parsed.data.revision).select('*').maybeSingle()
+    : await client.from('site_services_request').insert({ ...settings, service_id: card.id }).select('*').maybeSingle()
+  if (error || !data) {
+    if (uploaded) {
+      try { await removeMedia(client, [uploaded]) } catch (cleanupError) { console.error('Unable to clean up unpublished media', cleanupError) }
+    }
+    if (error?.code === '23505') throw conflict()
+    if (error) throw createError({ statusCode: 500, statusMessage: 'Unable to save Service request' })
+    throw conflict()
+  }
+  if (cleanup.length) {
+    try {
+      await removeMedia(client, cleanup)
+      const { error: cleanupError } = await client.from('site_services_request').update({ media_cleanup_paths: [] })
+        .eq('service_id', card.id).eq('revision', data.revision)
+      if (!cleanupError) data.media_cleanup_paths = []
+    } catch {
+      // Settings are already published; report a retryable cleanup rather than losing the saved revision.
+    }
+  }
+  return serializeServiceRequest(data)
+})

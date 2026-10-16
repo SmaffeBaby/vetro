@@ -2,8 +2,8 @@ export function useAdminPage() {
   const auth = useAdminAuth()
   onMounted(auth.restore)
   const route = useRoute()
-  const section = computed(() => route.query.section === 'services-detail' ? 'services-detail' : route.query.section === 'services-help-card' ? 'services-help-card' : route.query.section === 'services' ? 'services' : route.query.section === 'why' ? 'why' : route.query.section === 'how-work' ? 'how-work' : route.query.section === 'license' ? 'license' : route.query.section === 'costs' ? 'costs' : route.query.section === 'faq' ? 'faq' : route.query.section === 'contacts' ? 'contacts' : route.query.section === 'footer' ? 'footer' : route.query.section === 'about-card' ? 'about-card' : route.query.section === 'hero' ? 'hero' : route.query.section === 'skills' ? 'skills' : 'header')
-  const sectionTitle = computed(() => ({ 'services-detail': 'HeroSevicesDetail', 'services-help-card': 'HelpCard', services: 'Услуги', why: 'Почему мы', header: 'Хедер', hero: 'Hero', skills: 'Компетенции', 'about-card': 'AboutCard', footer: 'Footer', contacts: 'Контакты', faq: 'Вопросы', license: 'Лицензия', costs: 'Стоимость', 'how-work': 'Работа' })[section.value])
+  const section = computed(() => route.query.section === 'services-request' ? 'services-request' : route.query.section === 'services-detail' ? 'services-detail' : route.query.section === 'services-help-card' ? 'services-help-card' : route.query.section === 'services' ? 'services' : route.query.section === 'why' ? 'why' : route.query.section === 'how-work' ? 'how-work' : route.query.section === 'license' ? 'license' : route.query.section === 'costs' ? 'costs' : route.query.section === 'faq' ? 'faq' : route.query.section === 'contacts' ? 'contacts' : route.query.section === 'footer' ? 'footer' : route.query.section === 'about-card' ? 'about-card' : route.query.section === 'hero' ? 'hero' : route.query.section === 'skills' ? 'skills' : 'header')
+  const sectionTitle = computed(() => ({ 'services-request': 'Оставьте заявку', 'services-detail': 'HeroSevicesDetail', 'services-help-card': 'HelpCard', services: 'Услуги', why: 'Почему мы', header: 'Хедер', hero: 'Hero', skills: 'Компетенции', 'about-card': 'AboutCard', footer: 'Footer', contacts: 'Контакты', faq: 'Вопросы', license: 'Лицензия', costs: 'Стоимость', 'how-work': 'Работа' })[section.value])
   const navigation = computed(() => [
     { label: 'Общие', icon: 'i-lucide-panels-top-left', defaultOpen: true, children: [
       { label: 'Хедер', icon: 'i-lucide-panel-top', to: '/admin', active: section.value === 'header' },
@@ -24,7 +24,8 @@ export function useAdminPage() {
       { label: 'Услуги', icon: 'i-lucide-layout-grid', to: '/admin?section=services', active: section.value === 'services' },
       { label: 'HelpCard', icon: 'i-lucide-message-circle-question-mark', to: '/admin?section=services-help-card', active: section.value === 'services-help-card' },
       { label: 'Детальная страница сервисов', icon: 'i-lucide-file-text', defaultOpen: true, children: [
-        { label: 'HeroSevicesDetail', icon: 'i-lucide-layout-template', to: '/admin?section=services-detail', active: section.value === 'services-detail' }
+        { label: 'HeroSevicesDetail', icon: 'i-lucide-layout-template', to: '/admin?section=services-detail', active: section.value === 'services-detail' },
+        { label: 'Оставьте заявку', icon: 'i-lucide-send', to: '/admin?section=services-request', active: section.value === 'services-request' }
       ] }
     ] }
   ])

@@ -9,7 +9,7 @@ const componentName = /^[A-Za-z][A-Za-z0-9_-]{0,79}$/
 const homeComponents = new Set(['Hero', 'Skills', 'AboutCard', 'Why', 'HowWork', 'License', 'Costs', 'FAQ', 'Contacts'])
 export function isMediaComponent(value: string): boolean {
   const parts = value.split('/')
-  return parts.length === 1 ? componentName.test(value) : (parts.length === 2 && ['Home', 'Services'].includes(parts[0]!) && componentName.test(parts[1]!)) || value === 'Services/DetailServices/HeroSevicesDetail'
+  return parts.length === 1 ? componentName.test(value) : (parts.length === 2 && ['Home', 'Services'].includes(parts[0]!) && componentName.test(parts[1]!)) || ['Services/DetailServices/HeroSevicesDetail', 'Services/DetailServices/RequestCard'].includes(value)
 }
 
 /** Legacy component names still resolve to their page directory. Header and Footer are shared. */
