@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type {SiteObject,ObjectsCatalog} from '#shared/types/objects'
 import {mediaUrl} from '#shared/utils/media'
-import {serviceDetailHref} from '#shared/utils/services-detail'
 const props=defineProps<{object:SiteObject}>()
 const {data:catalog}=await useFetch<ObjectsCatalog>('/api/objects',{key:'site-objects'})
 const {data:services}=await useServices()
@@ -18,11 +17,11 @@ const activeServices=computed(()=>services.value.cards.filter(c=>props.object.se
     <div class="min-w-0">
      <ObjectsDetailText :title="object.title" :subtitle="object.subtitle" :description="object.description"><template #after-title><img v-if="object.imagePath" :src="mediaUrl(object.imagePath)" :alt="object.title" width="900" height="675" class="mt-6 aspect-[4/3] w-full rounded-[28px] object-cover desktop:hidden" /></template></ObjectsDetailText>
      <ObjectsProperties :category="category" :service-count="activeServices.length" :area="object.area" :since-year="object.sinceYear" class="mt-10 tablet:mt-14" />
-     <div v-if="activeServices.length" class="mt-8"><h2 class="text-lg font-semibold">Услуги на объекте</h2><ul class="mt-3 space-y-2"><li v-for="service in activeServices" :key="service.id"><NuxtLink :to="serviceDetailHref(service.id)" class="text-[#2a9ccf] underline decoration-[#2a9ccf]/30 underline-offset-4 hover:decoration-current">{{ service.title }}</NuxtLink></li></ul></div>
     </div>
     <img v-if="object.imagePath" :src="mediaUrl(object.imagePath)" :alt="object.title" width="900" height="675" class="hidden aspect-[4/3] w-full rounded-[40px] object-cover desktop:block" />
    </div>
    </div>
+   <ObjectsServices :cards="activeServices" class="mt-16 tablet:mt-24" />
    <ObjectsGallery :object-id="object.id" class="mx-auto mt-16 max-w-480 px-5 tablet:mt-24 tablet:px-8 desktop:px-[min(4.95%,95.04px)]" />
    <ObjectsResults :object-id="object.id" class="mt-16 tablet:mt-24" />
    <div class="mx-auto max-w-480 px-5 tablet:px-8 desktop:px-[min(4.95%,95.04px)]">
