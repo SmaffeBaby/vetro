@@ -11,7 +11,8 @@ const activeServices=computed(()=>services.value.cards.filter(c=>props.object.se
 <template>
  <div class="min-h-screen bg-white text-[#203e63]">
   <Header @request="navigateTo('/#contacts')" />
-  <main class="mx-auto max-w-480 px-5 pb-16 pt-6 tablet:px-8 tablet:pb-24 desktop:px-[4.95%] desktop:pt-10">
+  <main class="pb-16 pt-6 tablet:pb-24 desktop:pt-10">
+   <div class="mx-auto max-w-480 px-5 tablet:px-8 desktop:px-[min(4.95%,95.04px)]">
    <SharedBreadcrumbs :items="[{label:'Главная',to:'/'},{label:'Объекты',to:'/objects'},{label:object.title}]" />
    <div class="mt-8 grid items-start gap-10 desktop:grid-cols-[1.08fr_1fr] desktop:gap-16">
     <div class="min-w-0">
@@ -21,8 +22,12 @@ const activeServices=computed(()=>services.value.cards.filter(c=>props.object.se
     </div>
     <img v-if="object.imagePath" :src="mediaUrl(object.imagePath)" :alt="object.title" width="900" height="675" class="aspect-[4/3] w-full rounded-[32px] object-cover tablet:rounded-[40px]" />
    </div>
+   </div>
+   <ObjectsResults :object-id="object.id" class="mt-16 tablet:mt-24" />
+   <div class="mx-auto max-w-480 px-5 tablet:px-8 desktop:px-[min(4.95%,95.04px)]">
    <ObjectsOtherObjects :current-object-id="object.id" class="mt-16 tablet:mt-24" />
    <ObjectsRequestCard class="mt-16 tablet:mt-24" @request="navigateTo('/#contacts')" />
+   </div>
   </main>
   <Footer @request="navigateTo('/#contacts')" />
  </div>
