@@ -1,14 +1,20 @@
+import { defaultObjectsRequestCard } from '#shared/config/default-objects-request-card'
 import { defaultObjectsNextObject } from '#shared/config/default-objects-next-object'
 import type { ServicesHelpCardSettings } from '#shared/types/services-help-card'
 import { defaultServicesHelpCard } from '#shared/config/default-services-help-card'
 import { servicesHelpCardInputSchema } from '#shared/utils/services-help-card'
 
-export function useAdminServicesHelpCard(kind: 'services' | 'objects' = 'services') {
-  const api = kind === 'objects' ? 'objects-next-object' : 'services-help-card'
-  const label = kind === 'objects' ? 'Следующий объект' : 'HelpCard'
+export function useAdminServicesHelpCard(kind: 'services' | 'objects' | 'objects-detail' = 'services') {
+  const configs = {
+    services: { api:'services-help-card', label:'HelpCard', mediaComponent:'Services/HelpCard', defaults:defaultServicesHelpCard, description:'Блок консультации под карточками на странице услуг.' },
+    objects: { api:'objects-next-object', label:'Следующий объект', mediaComponent:'Objects/NextObject', defaults:defaultObjectsNextObject, description:'Блок заявки под карточками объектов. Настройки независимы от страницы услуг.' },
+    'objects-detail': { api:'objects-request-card', label:'Оставить заявку', mediaComponent:'Objects/RequestCard', defaults:defaultObjectsRequestCard, description:'Общий блок для всех детальных страниц объектов. Настройки независимы от каталога объектов и страницы услуг.' }
+  } as const
+  const { api, label, mediaComponent, defaults, description } = configs[kind]
+  const editorTitle = label, mediaDirectory = mediaComponent.replaceAll('/', ' / ')
   const { adminFetch } = useAdminAuth()
-  const media = useMedia(kind === 'objects' ? 'Objects/NextObject' : 'Services/HelpCard')
-  const form = reactive<ServicesHelpCardSettings>(structuredClone(kind === 'objects' ? defaultObjectsNextObject : defaultServicesHelpCard))
+  const media = useMedia(mediaComponent)
+  const form = reactive<ServicesHelpCardSettings>(structuredClone(defaults))
   const loading = ref(true)
   const saving = ref(false)
   const error = ref('')
@@ -71,5 +77,5 @@ export function useAdminServicesHelpCard(kind: 'services' | 'objects' = 'service
   const confirmLeave = () => !saving.value && (!isDirty.value || window.confirm('Есть несохранённые изменения. Покинуть страницу?'))
   onBeforeRouteLeave(confirmLeave)
   onBeforeRouteUpdate((to, from) => to.query.section === from.query.section || confirmLeave())
-  return { form, loading, saving, loaded, error, notice, isDirty, logoPreview, updatedLabel, save, load, discard, uploadLogo, removeLogo }
+  return { editorTitle, mediaDirectory, description, form, loading, saving, loaded, error, notice, isDirty, logoPreview, updatedLabel, save, load, discard, uploadLogo, removeLogo }
 }

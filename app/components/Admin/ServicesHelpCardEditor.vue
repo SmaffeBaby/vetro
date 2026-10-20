@@ -1,9 +1,6 @@
 <script setup lang="ts">
-const props=withDefaults(defineProps<{kind?:'services'|'objects'}>(),{kind:'services'})
-const editorTitle=props.kind==='objects'?'Следующий объект':'HelpCard'
-const mediaDirectory=props.kind==='objects'?'Objects / NextObject':'Services / HelpCard'
-const description=props.kind==='objects'?'Блок заявки под карточками объектов. Настройки независимы от страницы услуг.':'Блок консультации под карточками на странице услуг.'
-const { form, loading, saving, loaded, error, notice, isDirty, logoPreview, updatedLabel, save, load, discard, uploadLogo, removeLogo } = useAdminServicesHelpCard(props.kind)
+const props=withDefaults(defineProps<{kind?:'services'|'objects'|'objects-detail'}>(),{kind:'services'})
+const { editorTitle, mediaDirectory, description, form, loading, saving, loaded, error, notice, isDirty, logoPreview, updatedLabel, save, load, discard, uploadLogo, removeLogo } = useAdminServicesHelpCard(props.kind)
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 import type { H3Event } from 'h3'
 import { servicesHelpCardInputSchema } from '../../shared/utils/services-help-card'
 
-export async function saveContactCard(event: H3Event, config: { table: 'site_services_help_card' | 'site_objects_next_object'; mediaDirectory: 'Services/HelpCard' | 'Objects/NextObject' }) {
+export async function saveContactCard(event: H3Event, config: { table: 'site_services_help_card' | 'site_objects_next_object' | 'site_objects_request_card'; mediaDirectory: 'Services/HelpCard' | 'Objects/NextObject' | 'Objects/RequestCard' }) {
   const { client } = await requireSiteAdmin(event)
   const parsed = servicesHelpCardInputSchema.safeParse(await readBody(event))
   if (!parsed.success) {
