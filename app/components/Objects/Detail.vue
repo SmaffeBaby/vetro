@@ -21,6 +21,7 @@ const activeServices=computed(()=>services.value.cards.filter(c=>props.object.se
     </div>
     <img v-if="object.imagePath" :src="mediaUrl(object.imagePath)" :alt="object.title" width="900" height="675" class="aspect-[4/3] w-full rounded-[32px] object-cover tablet:rounded-[40px]" />
    </div>
+   <ObjectsOtherObjects :current-object-id="object.id" class="mt-16 tablet:mt-24" />
    <ObjectsRequestCard class="mt-16 tablet:mt-24" @request="navigateTo('/#contacts')" />
   </main>
   <Footer @request="navigateTo('/#contacts')" />
