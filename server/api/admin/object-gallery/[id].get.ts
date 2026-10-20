@@ -1,0 +1,1 @@
+export default defineEventHandler(async(event)=>{const {client}=await requireSiteAdmin(event);const id=await requireObjectRecord(client,getRouterParam(event,'id'));return readObjectGallery(client,id)})

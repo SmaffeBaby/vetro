@@ -1,0 +1,19 @@
+<script setup lang="ts">
+const {form,options,selectedId,previewHref,loading,saving,loaded,error,notice,isDirty,load,save,discard,selectObject,chooseFiles,removePhoto,movePhoto,photoUrl}=useAdminObjectGallery()
+</script>
+<template>
+ <div class="mx-auto w-full max-w-5xl space-y-6 px-5 py-8 tablet:px-8">
+  <div class="flex flex-wrap items-start justify-between gap-4"><div><h1 class="text-2xl font-semibold">Фотографии с объекта</h1><p class="mt-2 text-sm text-slate-500">Отдельная галерея для каждого объекта. Порядок фотографий задаёт порядок слайдов. Пустая галерея скрыта на сайте.</p></div><div class="flex gap-2"><UButton label="Отменить" variant="outline" color="neutral" :disabled="loading||saving||!isDirty" @click="discard"/><UButton label="Сохранить" :loading="saving" :disabled="loading||!isDirty" @click="save"/></div></div>
+  <div class="flex flex-wrap items-end gap-3"><UFormField label="Объект" class="min-w-0 flex-1"><USelect :model-value="selectedId" :items="options" :disabled="saving||loading||!options.length" aria-label="Выбрать объект для фотографий" class="w-full" @update:model-value="selectObject($event)"/></UFormField><UButton :to="previewHref" target="_blank" label="Открыть объект" variant="outline" color="neutral"/></div>
+  <USkeleton v-if="loading" class="h-80"/>
+  <UAlert v-if="error" :description="error" color="error"><template #actions><UButton label="Загрузить заново" :disabled="saving" @click="load"/></template></UAlert>
+  <UAlert v-if="notice" :description="notice" color="success"/>
+  <p v-if="!loading&&!error&&!options.length" class="text-sm text-slate-500">Сначала добавьте объект в разделе «Детальная страница объекта».</p>
+  <form v-if="loaded&&!loading" @submit.prevent="save"><fieldset :disabled="saving" class="space-y-6">
+   <UCard><UFormField label="Заголовок блока"><UInput v-model="form.title" maxlength="240" class="w-full"/></UFormField></UCard>
+   <UCard><UFormField label="Добавить фотографии" description="PNG, JPEG или WebP до 5 МБ каждое. До 25 МБ за сохранение, максимум 30 фото."><input type="file" multiple accept="image/png,image/jpeg,image/webp" aria-label="Добавить фотографии" class="block w-full text-sm" @change="chooseFiles($event)" /></UFormField><p class="mt-3 text-sm text-slate-500">{{form.photos.length}} / 30 фотографий · Media / Objects / Gallery</p></UCard>
+   <UCard v-for="(photo,index) in form.photos" :key="photo.id"><template #header><div class="flex items-center justify-between gap-4"><h2 class="font-semibold">Фото {{index+1}}</h2><div class="flex"><UButton icon="i-lucide-arrow-up" :aria-label="`Поднять фото ${index+1}`" variant="ghost" color="neutral" :disabled="index===0" @click="movePhoto(index,-1)"/><UButton icon="i-lucide-arrow-down" :aria-label="`Опустить фото ${index+1}`" variant="ghost" color="neutral" :disabled="index===form.photos.length-1" @click="movePhoto(index,1)"/><UButton icon="i-lucide-trash-2" :aria-label="`Удалить фото ${index+1}`" variant="ghost" color="error" @click="removePhoto(index)"/></div></div></template><div class="grid gap-5 tablet:grid-cols-[240px_1fr]"><img :src="photoUrl(photo)" :alt="photo.caption||photo.filename" class="aspect-[173/90] w-full rounded-lg object-cover"/><div class="space-y-4"><UFormField :label="`Подпись фото ${index+1}`"><UTextarea v-model="photo.caption" :rows="2" maxlength="500" class="w-full"/></UFormField><UFormField label="Заменить фотографию"><input type="file" accept="image/png,image/jpeg,image/webp" :aria-label="`Заменить фото ${index+1}`" class="block w-full text-sm" @change="chooseFiles($event,photo)"/></UFormField><p class="break-all text-xs text-slate-500">{{photo.filename}}</p></div></div></UCard>
+   <div><UButton type="submit" label="Сохранить изменения" :loading="saving" :disabled="!isDirty"/></div>
+  </fieldset></form>
+ </div>
+</template>

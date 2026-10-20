@@ -1,0 +1,1 @@
+export default defineEventHandler(async(event)=>{const client=serverSupabase(event),id=await requireObjectRecord(client,getRouterParam(event,'id'),true);setHeader(event,'Cache-Control','no-cache');return readObjectGallery(client,id)})

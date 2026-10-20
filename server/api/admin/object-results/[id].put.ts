@@ -1,7 +1,7 @@
 import {objectResultsInputSchema} from '../../../../shared/utils/object-results'
 export default defineEventHandler(async(event)=>{
  const {client}=await requireSiteAdmin(event)
- const id=await requireResultsObject(client,getRouterParam(event,'id'))
+ const id=await requireObjectRecord(client,getRouterParam(event,'id'))
  const parsed=objectResultsInputSchema.safeParse(await readBody(event))
  if(!parsed.success)throw createError({statusCode:400,data:{message:parsed.error.issues[0]?.message}})
  const patch={title:parsed.data.title,cards:parsed.data.cards,revision:parsed.data.revision+1,updated_at:new Date().toISOString()}

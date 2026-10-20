@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     '/images/**': { security: { rateLimiter: false } },
     '/fonts/**': { security: { rateLimiter: false } },
     '/supabase/storage/v1/object/public/**': { security: { rateLimiter: false } },
+    '/api/admin/object-gallery/**': { security: { requestSizeLimiter: { maxUploadFileRequestInBytes: 26_000_000 } } },
     '/api/**': { security: { rateLimiter: { tokensPerInterval: 120, interval: 300000 } } },
     '/supabase/auth/v1/**': { security: { rateLimiter: { tokensPerInterval: 120, interval: 300000 } } }
   },
