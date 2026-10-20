@@ -16,6 +16,7 @@ const cards=computed(()=>catalog.value?.objects.filter(o=>category.value==='all'
     <p v-else class="py-16 text-lg" role="status">В этой категории пока нет объектов.</p>
    </template>
    <p v-if="error" class="py-16" role="alert">Не удалось загрузить объекты. Обновите страницу.</p>
+   <ObjectsNextObject class="mt-16 tablet:mt-24" @request="navigateTo('/#contacts')" />
   </main>
   <Footer @request="navigateTo('/#contacts')" />
  </div>

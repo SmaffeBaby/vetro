@@ -1,11 +1,14 @@
+import { defaultObjectsNextObject } from '#shared/config/default-objects-next-object'
 import type { ServicesHelpCardSettings } from '#shared/types/services-help-card'
 import { defaultServicesHelpCard } from '#shared/config/default-services-help-card'
 import { servicesHelpCardInputSchema } from '#shared/utils/services-help-card'
 
-export function useAdminServicesHelpCard() {
+export function useAdminServicesHelpCard(kind: 'services' | 'objects' = 'services') {
+  const api = kind === 'objects' ? 'objects-next-object' : 'services-help-card'
+  const label = kind === 'objects' ? 'Следующий объект' : 'HelpCard'
   const { adminFetch } = useAdminAuth()
-  const media = useMedia('Services/HelpCard')
-  const form = reactive<ServicesHelpCardSettings>(structuredClone(defaultServicesHelpCard))
+  const media = useMedia(kind === 'objects' ? 'Objects/NextObject' : 'Services/HelpCard')
+  const form = reactive<ServicesHelpCardSettings>(structuredClone(kind === 'objects' ? defaultObjectsNextObject : defaultServicesHelpCard))
   const loading = ref(true)
   const saving = ref(false)
   const error = ref('')
@@ -25,7 +28,7 @@ export function useAdminServicesHelpCard() {
     if (saving.value) return
     loading.value = true
     error.value = ''
-    try { accept(await $fetch<ServicesHelpCardSettings>('/api/services-help-card')) } catch { error.value = 'Не удалось загрузить HelpCard.' }
+    try { accept(await $fetch<ServicesHelpCardSettings>(`/api/${api}`)) } catch { error.value = `Не удалось загрузить ${label}.` }
     finally { loading.value = false }
   }
   async function save() {
@@ -35,10 +38,10 @@ export function useAdminServicesHelpCard() {
     if (!parsed.success) { error.value = parsed.error.issues[0]?.message ?? 'Проверьте поля'; return }
     saving.value = true
     try {
-      accept(await adminFetch<ServicesHelpCardSettings>('/api/admin/services-help-card', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-services-help-card')
-      if (form.mediaCleanupPending) error.value = 'HelpCard сохранён, но Storage не удалил старый файл. Нажмите «Сохранить» для повторной попытки.'
-      else notice.value = 'HelpCard опубликован. Изменения уже доступны на сайте.'
+      accept(await adminFetch<ServicesHelpCardSettings>(`/api/admin/${api}`, { method: 'PUT', body: parsed.data }))
+      await refreshNuxtData(`site-${api}`)
+      if (form.mediaCleanupPending) error.value = `${label}: настройки сохранены, но старый файл не удалён. Сохраните ещё раз для повторной попытки.`
+      else notice.value = `${label}: изменения опубликованы.`
     } catch (e) { error.value = message(e) }
     finally { saving.value = false }
   }
@@ -56,6 +59,7 @@ export function useAdminServicesHelpCard() {
     finally { input.value = '' }
   }
   function removeLogo() {
+    if (saving.value) return
     form.svg = ''
     form.filename = 'logo.svg'
     error.value = ''; notice.value = ''
@@ -64,7 +68,7 @@ export function useAdminServicesHelpCard() {
   function warnUnsaved(event: BeforeUnloadEvent) { if (isDirty.value && !loading.value) { event.preventDefault(); event.returnValue = '' } }
   onMounted(() => { void load(); window.addEventListener('beforeunload', warnUnsaved) })
   onBeforeUnmount(() => window.removeEventListener('beforeunload', warnUnsaved))
-  const confirmLeave = () => !isDirty.value || window.confirm('Есть несохранённые изменения. Покинуть страницу?')
+  const confirmLeave = () => !saving.value && (!isDirty.value || window.confirm('Есть несохранённые изменения. Покинуть страницу?'))
   onBeforeRouteLeave(confirmLeave)
   onBeforeRouteUpdate((to, from) => to.query.section === from.query.section || confirmLeave())
   return { form, loading, saving, loaded, error, notice, isDirty, logoPreview, updatedLabel, save, load, discard, uploadLogo, removeLogo }
