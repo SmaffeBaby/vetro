@@ -21,7 +21,10 @@ const activeServices=computed(()=>services.value.cards.filter(c=>props.object.se
     <img v-if="object.imagePath" :src="mediaUrl(object.imagePath)" :alt="object.title" width="900" height="675" class="hidden aspect-[4/3] w-full rounded-[40px] object-cover desktop:block" />
    </div>
    </div>
-   <ObjectsServices :cards="activeServices" class="mt-16 tablet:mt-24" />
+   <div class="mt-16 bg-[#f8f9fa] tablet:mt-24">
+    <ObjectsEquipment :object-id="object.id" />
+    <ObjectsServices :cards="activeServices" />
+   </div>
    <ObjectsGallery :object-id="object.id" class="mx-auto mt-16 max-w-480 px-5 tablet:mt-24 tablet:px-8 desktop:px-[min(4.95%,95.04px)]" />
    <ObjectsResults :object-id="object.id" class="mt-16 tablet:mt-24" />
    <div class="mx-auto max-w-480 px-5 tablet:px-8 desktop:px-[min(4.95%,95.04px)]">

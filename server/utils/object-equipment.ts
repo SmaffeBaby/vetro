@@ -1,0 +1,5 @@
+import type {ObjectEquipmentSettings} from '../../shared/types/object-equipment'
+import {createDefaultObjectEquipment} from '../../shared/config/default-object-equipment'
+import type {SupabaseClient} from '@supabase/supabase-js'
+export function serializeObjectEquipment(row:Record<string,unknown>):ObjectEquipmentSettings{return{objectId:row.object_id as string,enabled:row.enabled as boolean,title:row.title as string,columns:row.columns as ObjectEquipmentSettings['columns'],rows:row.rows as ObjectEquipmentSettings['rows'],description:row.description as string,revision:Number(row.revision),updatedAt:row.updated_at as string}}
+export async function readObjectEquipment(client:SupabaseClient,id:string):Promise<ObjectEquipmentSettings>{const {data,error}=await client.from('site_object_equipment').select('*').eq('object_id',id).maybeSingle();if(error)throw createError({statusCode:503,statusMessage:'Object equipment unavailable'});return data?serializeObjectEquipment(data):createDefaultObjectEquipment(id)}
