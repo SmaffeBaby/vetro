@@ -11,7 +11,7 @@ export const defaultHeader: HeaderSettings = {
     {
       "id": "projects",
       "label": "Объекты",
-      "href": "/#projects"
+      "href": "/objects"
     },
     {
       "id": "about",

@@ -16,7 +16,7 @@ export const defaultFooter: FooterSettings = {
       entry('address', 'г. Санкт-Петербург,\nул. Шпалерная, д. 54/2')
     ] },
     { id: 'navigation', title: 'О Ветро', sortOrder: 20, items: [
-      entry('services', 'Наши услуги', '/services'), entry('projects', 'Объекты', '/#projects'),
+      entry('services', 'Наши услуги', '/services'), entry('projects', 'Объекты', '/objects'),
       entry('about', 'О компании', '/#about'), entry('licenses', 'Лицензии и сертификаты', '/#licenses'), entry('contact', 'Контакты', '/#contacts')
     ] }
   ],

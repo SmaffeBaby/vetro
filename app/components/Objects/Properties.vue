@@ -1,0 +1,4 @@
+<script setup lang="ts">
+defineProps<{category:string;serviceCount:number;area:string;sinceYear:number|null}>()
+</script>
+<template><dl class="grid grid-cols-1 gap-4 text-lg tablet:grid-cols-2 tablet:text-xl desktop:text-2xl"><div v-if="category" class="rounded-2xl border border-dashed border-slate-200 p-6 text-center"><dt class="inline">Тип: </dt><dd class="inline">{{ category }}</dd></div><div class="rounded-2xl border border-dashed border-slate-200 p-6 text-center"><dt class="inline">Услуг на объекте: </dt><dd class="inline">{{ serviceCount }}</dd></div><div v-if="area" class="rounded-2xl border border-dashed border-slate-200 p-6 text-center"><dt class="inline">Площадь: </dt><dd class="inline">{{ area }}</dd></div><div v-if="sinceYear" class="rounded-2xl border border-dashed border-slate-200 p-6 text-center"><dt class="sr-only">Начало обслуживания</dt><dd>На обслуживании с {{ sinceYear }} года</dd></div></dl></template>

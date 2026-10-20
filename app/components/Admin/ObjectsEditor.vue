@@ -1,0 +1,17 @@
+<script setup lang="ts">
+const {form,objects,loading,saving,loaded,error,notice,isDirty,load,save,discard,addCategory,removeCategory}=useAdminObjectsSettings()
+</script>
+<template>
+ <div class="mx-auto w-full max-w-5xl space-y-6 px-5 py-8 tablet:px-8">
+  <div class="flex flex-wrap items-start justify-between gap-4"><div><h1 class="text-2xl font-semibold">Общая объектов</h1><p class="mt-2 text-sm text-slate-500">Заголовок каталога, фильтры и список объектов. Карточка и детальная страница используют общие данные.</p></div><div class="flex gap-2"><UButton label="Отменить" variant="outline" color="neutral" :disabled="loading||saving||!isDirty" @click="discard"/><UButton label="Сохранить" :loading="saving" :disabled="loading||!isDirty" @click="save"/></div></div>
+  <USkeleton v-if="loading" class="h-80" />
+  <UAlert v-if="error" :description="error" color="error"><template #actions><UButton label="Загрузить заново" :disabled="saving" @click="load" /></template></UAlert>
+  <UAlert v-if="notice" :description="notice" color="success" />
+  <form v-if="loaded&&!loading" @submit.prevent="save"><fieldset :disabled="saving" class="space-y-6">
+   <UCard><div class="space-y-5"><UFormField label="Заголовок страницы"><UTextarea v-model="form.title" :rows="2" maxlength="240" class="w-full"/></UFormField><UFormField label="Текст кнопки карточки"><UInput v-model="form.buttonLabel" maxlength="80" class="w-full"/></UFormField></div></UCard>
+   <UCard><template #header><h2 class="font-semibold">Категории объектов</h2><p class="mt-1 text-sm text-slate-500">Фильтр «Все» добавляется автоматически. Назначенную объекту категорию удалить нельзя.</p></template><div class="space-y-4"><div v-for="(category,index) in form.categories" :key="index" class="flex flex-wrap items-end gap-3"><UFormField :label="`ID категории ${index+1}`" class="flex-1"><UInput v-model="category.id" class="w-full"/></UFormField><UFormField :label="`Название категории ${index+1}`" class="flex-1"><UInput v-model="category.label" maxlength="100" class="w-full"/></UFormField><UButton icon="i-lucide-trash-2" :aria-label="`Удалить категорию ${index+1}`" color="error" variant="ghost" :disabled="form.categories.length<=1" @click="removeCategory(index)"/></div><UButton label="Добавить категорию" variant="outline" :disabled="form.categories.length>=20" @click="addCategory"/></div></UCard>
+   <UButton type="submit" label="Сохранить изменения" :loading="saving" :disabled="!isDirty" />
+  </fieldset></form>
+  <UCard v-if="loaded"><template #header><div class="flex flex-wrap items-center justify-between gap-4"><h2 class="font-semibold">Объекты · {{ objects.length }}</h2><UButton to="/admin?section=objects-detail&create=1" label="Добавить объект" icon="i-lucide-plus" :disabled="saving"/></div></template><div class="divide-y divide-slate-100"><div v-for="object in objects" :key="object.id" class="flex flex-wrap items-center justify-between gap-4 py-4"><div class="min-w-0"><p class="font-medium">{{ object.title }}</p><p class="mt-1 text-sm text-slate-500">{{ object.address }}</p><UBadge class="mt-2" :color="object.published?'success':'neutral'" variant="subtle">{{ object.published?'Опубликован':'Скрыт' }}</UBadge></div><UButton :to="`/admin?section=objects-detail&object=${encodeURIComponent(object.id)}`" label="Редактировать" variant="outline" color="neutral" :disabled="saving"/></div></div></UCard>
+ </div>
+</template>
