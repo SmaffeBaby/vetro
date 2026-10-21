@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = withDefaults(defineProps<{ kind?: 'home' | 'page' }>(), { kind: 'home' })
+const props = withDefaults(defineProps<{ kind?: 'home' | 'page'; formOnly?: boolean }>(), { kind: 'home', formOnly: false })
 const { form, loading, saving, loaded, error, notice, isDirty, updatedLabel, iconPreview, load, save, uploadSvg, removeSvg, discard } = useAdminContacts(props.kind)
 const labels = { phone: 'Телефон', address: 'Адрес', email: 'Email' }
 </script>
@@ -7,7 +7,7 @@ const labels = { phone: 'Телефон', address: 'Адрес', email: 'Email' 
 <template>
   <div class="mx-auto w-full max-w-5xl px-5 py-8 tablet:px-8">
     <div class="mb-8 flex flex-wrap items-start justify-between gap-4">
-      <div><div class="mb-2 flex items-center gap-2"><h1 class="text-2xl font-semibold tracking-tight">Контакты</h1><UBadge v-if="loaded" :color="isDirty ? 'warning' : 'success'" variant="subtle">{{ isDirty ? 'Есть изменения' : 'Опубликованы' }}</UBadge></div><p class="text-sm text-slate-500">{{ kind === 'page' ? 'Контакты страницы /contacts, реквизиты, мессенджеры и карта.' : 'Контактный блок на главной странице.' }}</p><UButton v-if="kind === 'page'" to="/contacts" target="_blank" label="Открыть страницу контактов" color="neutral" variant="link" class="mt-2" /></div>
+      <div><div class="mb-2 flex items-center gap-2"><h1 class="text-2xl font-semibold tracking-tight">{{ formOnly ? 'Напишите нам' : 'Контакты' }}</h1><UBadge v-if="loaded" :color="isDirty ? 'warning' : 'success'" variant="subtle">{{ isDirty ? 'Есть изменения' : 'Опубликованы' }}</UBadge></div><p class="text-sm text-slate-500">{{ formOnly ? 'Настройки блока «Напишите нам» на странице /contacts.' : kind === 'page' ? 'Контакты страницы /contacts, реквизиты, мессенджеры и карта.' : 'Контактный блок на главной странице.' }}</p><UButton v-if="kind === 'page'" :to="formOnly ? '/contacts#write-us' : '/contacts'" target="_blank" label="Открыть страницу контактов" color="neutral" variant="link" class="mt-2" /></div>
       <div class="flex gap-2"><UButton label="Отменить" color="neutral" variant="outline" :disabled="loading || saving || !isDirty" @click="discard" /><UButton label="Сохранить" icon="i-lucide-check" :loading="saving" :disabled="loading || !isDirty" @click="save" /></div>
     </div>
     <div v-if="loading" class="space-y-5"><USkeleton class="h-64 w-full" /><USkeleton class="h-80 w-full" /></div>
@@ -16,6 +16,8 @@ const labels = { phone: 'Телефон', address: 'Адрес', email: 'Email' 
       <UAlert v-if="notice" color="success" variant="soft" :description="notice" role="status" />
       <form v-if="loaded" id="contacts-settings" @submit.prevent="save">
         <fieldset :disabled="saving" class="space-y-6">
+          <AdminContactsFormFields v-if="formOnly" :form="form.page.form" />
+          <template v-else>
           <AdminContactsPageFields v-if="kind === 'page'" :page="form.page" @upload="uploadSvg" @remove="removeSvg" />
           <UCard v-for="item in form.items" :key="item.id">
             <template #header><h2 class="font-semibold">{{ labels[item.id] }}</h2></template>
@@ -29,6 +31,7 @@ const labels = { phone: 'Телефон', address: 'Адрес', email: 'Email' 
               <AdminFooterEntryFields :item="item" :label="labels[item.id]" :allow-highlight="false" />
             </div>
           </UCard>
+          </template>
           <div class="flex flex-wrap items-center justify-between gap-4 pb-4"><p class="text-xs text-slate-400">Сохранено: {{ updatedLabel }}</p><UButton type="submit" label="Сохранить изменения" :loading="saving" :disabled="!isDirty" /></div>
         </fieldset>
       </form>

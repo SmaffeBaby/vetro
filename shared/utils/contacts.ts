@@ -7,7 +7,23 @@ function yandexUrl(value: string, widget = false) {
     return url.protocol === 'https:' && url.hostname === 'yandex.ru' && !url.port && !url.username && !url.password && (widget ? url.pathname === '/map-widget/v1/' : url.pathname.startsWith('/maps/'))
   } catch { return false }
 }
+const formFieldSchema = z.object({
+  label: z.string().trim().min(1, 'Введите подпись поля').max(120),
+  placeholder: z.string().trim().max(240), required: z.boolean()
+})
+export const contactFormInputSchema = z.object({
+  enabled: z.boolean(),
+  title: z.string().trim().min(1, 'Введите заголовок формы').max(240),
+  text: z.string().trim().max(4000),
+  phoneTitle: z.string().trim().max(240), phoneText: z.string().trim().max(120),
+  phoneHref: z.string().trim().max(100).regex(/^tel:\+?[0-9() -]{3,80}$/, 'Укажите телефон в формате tel:+79117200510'),
+  fields: z.object({ name: formFieldSchema, phone: formFieldSchema, email: formFieldSchema, subject: formFieldSchema, message: formFieldSchema }),
+  topics: z.array(z.string().trim().min(1, 'Введите название темы').max(160)).max(30, 'Максимум 30 тем').refine(items => new Set(items).size === items.length, 'Темы не должны повторяться'),
+  consentText: z.string().trim().min(1, 'Введите текст согласия').max(2000), consentRequired: z.boolean(),
+  buttonLabel: z.string().trim().min(1, 'Введите подпись кнопки').max(80)
+})
 export const contactsPageInputSchema = z.object({
+  form: contactFormInputSchema,
   title: z.string().trim().min(1, 'Введите заголовок страницы').max(240),
   hours: z.string().trim().max(1000),
   requisitesTitle: z.string().trim().min(1, 'Введите заголовок реквизитов').max(240),

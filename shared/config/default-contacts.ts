@@ -1,7 +1,9 @@
 import type { ContactId, ContactItem, ContactsSettings } from '../types/contacts'
 import { contactIcons } from './contact-icons'
 import { contactSocialIcons } from './contact-social-icons'
+import { defaultContactForm } from './default-contact-form'
 export const defaultContactsPage = {
+  form: defaultContactForm,
   title: 'Контакты', hours: '', requisitesTitle: 'Реквизиты компании', requisites: '',
   mapSrc: 'https://yandex.ru/map-widget/v1/?ll=30.371767%2C59.951292&mode=whatshere&whatshere%5Bpoint%5D=30.373953%2C59.949925&whatshere%5Bzoom%5D=17&z=14.97',
   mapHref: 'https://yandex.ru/maps/2/saint-petersburg/house/shpalernaya_ulitsa_54_2/Z0kYdQBjQEAEQFtjfXV1eHVhYQ==/?ll=30.371767%2C59.951292&z=14.97',

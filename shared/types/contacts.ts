@@ -23,6 +23,7 @@ export interface ContactSocial {
   iconPath?: string | null
 }
 export interface ContactsPageSettings {
+  form: ContactFormSettings
   title: string
   hours: string
   requisitesTitle: string
@@ -31,4 +32,19 @@ export interface ContactsPageSettings {
   mapHref: string
   mapTitle: string
   socials: ContactSocial[]
+}
+export type ContactFormFieldId = 'name' | 'phone' | 'email' | 'subject' | 'message'
+export interface ContactFormField { label: string; placeholder: string; required: boolean }
+export interface ContactFormSettings {
+  enabled: boolean
+  title: string
+  text: string
+  phoneTitle: string
+  phoneText: string
+  phoneHref: string
+  fields: Record<ContactFormFieldId, ContactFormField>
+  topics: string[]
+  consentText: string
+  consentRequired: boolean
+  buttonLabel: string
 }
