@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { WorkCard } from '#shared/types/how-work.ts'
-defineProps<{ card: WorkCard; number: number; active: boolean }>()
+withDefaults(defineProps<{ card: WorkCard; number: number; active: boolean; interactive?: boolean }>(), { interactive: true })
 const emit = defineEmits<{ select: [] }>()
 </script>
 
 <template>
-  <li class="work-card min-w-0" :data-active="active" @click="emit('select')">
-    <h3><button :id="`work-trigger-${card.id}`" type="button" :aria-expanded="active" :aria-controls="`work-text-${card.id}`" class="work-trigger flex w-full items-start text-left font-bold leading-[1.4]" @click.stop="emit('select')"><span aria-hidden="true" class="work-number flex shrink-0 items-center justify-center rounded-full border-2 font-bold leading-none">{{ number }}</span><span class="work-title min-w-0 whitespace-pre-line [overflow-wrap:anywhere]">{{ card.title }}</span></button></h3>
+  <li class="work-card min-w-0" :data-active="active" @pointerenter="interactive && $event.pointerType !== 'touch' && emit('select')" @focusin="interactive && emit('select')">
+    <h3><component :is="interactive ? 'button' : 'span'" :id="`work-trigger-${card.id}`" :type="interactive ? 'button' : undefined" :aria-expanded="interactive ? active : undefined" :aria-controls="interactive ? `work-text-${card.id}` : undefined" class="work-trigger flex w-full items-start text-left font-bold leading-[1.4]"><span aria-hidden="true" class="work-number flex shrink-0 items-center justify-center rounded-full border-2 font-bold leading-none">{{ number }}</span><span class="work-title min-w-0 whitespace-pre-line [overflow-wrap:anywhere]">{{ card.title }}</span></component></h3>
     <div :id="`work-text-${card.id}`" role="region" :aria-labelledby="`work-trigger-${card.id}`" :aria-hidden="!active" :inert="!active" class="work-description">
       <div class="min-h-0 overflow-hidden"><p class="whitespace-pre-line pt-6 text-base font-medium leading-[1.25] [overflow-wrap:anywhere]">{{ card.text }}</p></div>
     </div>
@@ -24,6 +24,10 @@ const emit = defineEmits<{ select: [] }>()
 .work-card[data-active="true"] .work-number { color: white; border-color: #2a9ccf; background: #2a9ccf; }
 .work-description { display: grid; grid-template-rows: 0fr; opacity: 0; transform: translateY(8px); margin-left: calc(var(--counter) + var(--card-gap)); transition: grid-template-rows 380ms ease, opacity 300ms ease, transform 380ms ease; }
 .work-card[data-active="true"] .work-description { grid-template-rows: 1fr; opacity: 1; transform: translateY(0); }
+@media (max-width: 1199px), (hover: none), (pointer: coarse) {
+  .work-card, .work-trigger { cursor: default; }
+  .work-description { transition: none; }
+}
 @variant desktop {
   .work-card { flex: 1 1 0%; min-height: 264px; }
   .work-card[data-active="true"] { flex-grow: 1.4; }
