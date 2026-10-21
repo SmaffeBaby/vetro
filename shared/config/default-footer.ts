@@ -17,7 +17,7 @@ export const defaultFooter: FooterSettings = {
     ] },
     { id: 'navigation', title: 'О Ветро', sortOrder: 20, items: [
       entry('services', 'Наши услуги', '/services'), entry('projects', 'Объекты', '/objects'),
-      entry('about', 'О компании', '/#about'), entry('licenses', 'Лицензии и сертификаты', '/#licenses'), entry('contact', 'Контакты', '/contacts')
+      entry('about', 'О компании', '/about'), entry('licenses', 'Лицензии и сертификаты', '/#licenses'), entry('contact', 'Контакты', '/contacts')
     ] }
   ],
   buttonLabel: 'Написать нам',

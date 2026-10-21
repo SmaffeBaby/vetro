@@ -16,7 +16,7 @@ export const defaultHeader: HeaderSettings = {
     {
       "id": "about",
       "label": "О компании",
-      "href": "/#about"
+      "href": "/about"
     },
     {
       "id": "licenses",
