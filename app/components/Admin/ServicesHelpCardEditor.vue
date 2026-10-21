@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props=withDefaults(defineProps<{kind?:'services'|'objects'|'objects-detail'}>(),{kind:'services'})
+const props=withDefaults(defineProps<{kind?:'services'|'objects'|'objects-detail'|'about-project'}>(),{kind:'services'})
 const { editorTitle, mediaDirectory, description, form, loading, saving, loaded, error, notice, isDirty, logoPreview, updatedLabel, save, load, discard, uploadLogo, removeLogo } = useAdminServicesHelpCard(props.kind)
 </script>
 
@@ -17,7 +17,7 @@ const { editorTitle, mediaDirectory, description, form, loading, saving, loaded,
         <UCard><template #header><h2 class="font-semibold">Заголовок, текст и кнопка</h2></template><div class="space-y-5">
           <UFormField label="Заголовок"><UTextarea v-model="form.title" :aria-label="`Заголовок ${editorTitle}`" :rows="2" maxlength="240" class="w-full" /></UFormField>
           <UFormField label="Текст"><UTextarea v-model="form.text" :aria-label="`Текст ${editorTitle}`" :rows="4" maxlength="3000" class="w-full" /></UFormField>
-          <UFormField label="Текст кнопки" description="Кнопка ведёт к контактам на главной странице."><UInput v-model="form.buttonLabel" :aria-label="`Текст кнопки ${editorTitle}`" maxlength="80" class="w-full" /></UFormField>
+          <UFormField label="Текст кнопки" :description="kind === 'about-project' ? 'Кнопка ведёт к форме на странице контактов.' : 'Кнопка ведёт к контактам на главной странице.'"><UInput v-model="form.buttonLabel" :aria-label="`Текст кнопки ${editorTitle}`" maxlength="80" class="w-full" /></UFormField>
         </div></UCard>
         <UCard><template #header><h2 class="font-semibold">SVG изображение</h2><p class="mt-1 text-sm text-slate-500">Media / {{ mediaDirectory }}. Загрузка и удаление применяются при сохранении.</p></template>
           <div class="grid gap-6 tablet:grid-cols-[1fr_240px]">

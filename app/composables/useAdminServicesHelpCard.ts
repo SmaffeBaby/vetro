@@ -1,11 +1,13 @@
+import { defaultAboutProject } from '#shared/config/default-about-project'
 import { defaultObjectsRequestCard } from '#shared/config/default-objects-request-card'
 import { defaultObjectsNextObject } from '#shared/config/default-objects-next-object'
 import type { ServicesHelpCardSettings } from '#shared/types/services-help-card'
 import { defaultServicesHelpCard } from '#shared/config/default-services-help-card'
 import { servicesHelpCardInputSchema } from '#shared/utils/services-help-card'
 
-export function useAdminServicesHelpCard(kind: 'services' | 'objects' | 'objects-detail' = 'services') {
+export function useAdminServicesHelpCard(kind: 'services' | 'objects' | 'objects-detail' | 'about-project' = 'services') {
   const configs = {
+    'about-project': { api:'about-project', label:'Обсудить ваш проект', mediaComponent:'AboutProject', defaults:defaultAboutProject, description:'Блок заявки под благодарственными письмами на странице «О компании».' },
     services: { api:'services-help-card', label:'HelpCard', mediaComponent:'Services/HelpCard', defaults:defaultServicesHelpCard, description:'Блок консультации под карточками на странице услуг.' },
     objects: { api:'objects-next-object', label:'Следующий объект', mediaComponent:'Objects/NextObject', defaults:defaultObjectsNextObject, description:'Блок заявки под карточками объектов. Настройки независимы от страницы услуг.' },
     'objects-detail': { api:'objects-request-card', label:'Оставить заявку', mediaComponent:'Objects/RequestCard', defaults:defaultObjectsRequestCard, description:'Общий блок для всех детальных страниц объектов. Настройки независимы от каталога объектов и страницы услуг.' }
