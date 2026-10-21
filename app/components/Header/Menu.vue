@@ -2,6 +2,8 @@
 import type { HeaderMenuItem } from '#shared/types/header'
 defineProps<{ items: HeaderMenuItem[] }>()
 const { isOpen, toggle, close, closeAndFocus } = useHeaderMenu()
+const emit = defineEmits<{ 'update:open': [open: boolean] }>()
+watch(isOpen, open => emit('update:open', open))
 </script>
 
 <template>
