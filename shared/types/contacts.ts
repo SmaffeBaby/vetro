@@ -9,7 +9,26 @@ export interface ContactItem extends FooterEntry {
 }
 export interface ContactsSettings {
   items: ContactItem[]
+  page: ContactsPageSettings
   revision: number
   updatedAt: string | null
   mediaCleanupPending?: boolean
+}
+export interface ContactSocial {
+  id: 'telegram' | 'whatsapp'
+  title: string
+  href: string
+  svg: string
+  iconFilename: string
+  iconPath?: string | null
+}
+export interface ContactsPageSettings {
+  title: string
+  hours: string
+  requisitesTitle: string
+  requisites: string
+  mapSrc: string
+  mapHref: string
+  mapTitle: string
+  socials: ContactSocial[]
 }

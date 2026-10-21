@@ -7,7 +7,7 @@ const emit = defineEmits<{ request: [] }>()
   <section id="contacts" aria-labelledby="contacts-title" class="site-contacts mx-auto max-w-480 px-5 pb-16 text-[#203e63] tablet:px-8 tablet:pb-24 desktop:px-[4.95%]">
     <div class="grid overflow-hidden rounded-[20px] bg-[#f5f6f8] desktop:grid-cols-[38%_62%]">
       <ContactsLeftSide :items="contacts.items" @request="emit('request')" />
-      <ContactsYandexMap />
+      <ContactsYandexMap :src="contacts.page.mapSrc" :href="contacts.page.mapHref" :title="contacts.page.mapTitle" />
     </div>
   </section>
 </template>

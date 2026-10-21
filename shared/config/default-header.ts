@@ -26,7 +26,7 @@ export const defaultHeader: HeaderSettings = {
     {
       "id": "contacts",
       "label": "Контакты",
-      "href": "/#contacts"
+      "href": "/contacts"
     }
   ],
   "buttonLabel": "Оставить заявку",
