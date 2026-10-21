@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends { id: string }">
 defineSlots<{ default(props: { item: T }): unknown }>()
-const props = withDefaults(defineProps<{ items: T[]; title: string; description?: string; regionId: string; itemClass?: string; previousLabel?: string; nextLabel?: string }>(), { description: '', itemClass: 'basis-[88%] ps-5 tablet:basis-[47%] desktop:basis-[31%]', previousLabel: 'Предыдущие карточки', nextLabel: 'Следующие карточки' })
+const props = withDefaults(defineProps<{ items: T[]; title: string; description?: string; regionId: string; itemClass?: string; carouselClass?: string; previousLabel?: string; nextLabel?: string }>(), { description: '', itemClass: 'basis-[88%] ps-5 tablet:basis-[47%] desktop:basis-[31%]', carouselClass: 'mt-10 rounded-[32px] tablet:mt-14', previousLabel: 'Предыдущие карточки', nextLabel: 'Следующие карточки' })
 const carousel = useTemplateRef('carousel')
 const canScrollPrev = ref(false), canScrollNext = ref(false)
 function updateControls() { canScrollPrev.value = carousel.value?.emblaApi?.canScrollPrev() ?? false; canScrollNext.value = carousel.value?.emblaApi?.canScrollNext() ?? false }
@@ -20,7 +20,7 @@ onBeforeUnmount(() => carousel.value?.emblaApi?.off('reInit',updateControls))
     <button type="button" :aria-label="nextLabel" class="carousel-arrow" :disabled="!canScrollNext" @click="scrollNext"><span class="carousel-arrow-icon carousel-arrow-right" aria-hidden="true" /></button>
    </div>
   </div>
-  <UCarousel ref="carousel" :items="props.items" align="start" :loop="false" @select="updateControls" :aria-label="title" class="mt-10 rounded-[32px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2a9ccf] tablet:mt-14" :ui="{viewport:'cursor-grab active:cursor-grabbing',container:'items-stretch -ms-5',item:itemClass}">
+  <UCarousel ref="carousel" :items="props.items" align="start" :loop="false" @select="updateControls" :aria-label="title" class="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2a9ccf]" :class="carouselClass" :ui="{viewport:'cursor-grab active:cursor-grabbing',container:'items-stretch -ms-5',item:itemClass}">
    <template #default="{ item }"><slot :item="item as T" /></template>
   </UCarousel>
  </div>
