@@ -6,7 +6,7 @@ useHead({ title: () => `${content.value.title} · Ветро` })
 </script>
 
 <template>
-  <div class="privacy-page min-h-screen bg-[#f7f8fa] text-[#203e63]">
+  <div class="privacy-page min-h-screen bg-site-surface text-site-ink">
     <Header @request="navigateTo('/contacts#write-us')" />
     <main class="mx-auto max-w-480 px-5 pb-16 pt-6 tablet:px-8 tablet:pb-24 desktop:px-[4.95%] desktop:pt-10">
       <SharedBreadcrumbs :items="[{ label: 'Главная', to: '/' }, { label: content.breadcrumb }]" />
@@ -20,5 +20,5 @@ useHead({ title: () => `${content.value.title} · Ветро` })
 
 <style scoped>
 .privacy-page { font-family: Montserrat, sans-serif; }
-.privacy-page :deep(.site-header), .privacy-page :deep(#header-navigation) { background-color: #f7f8fa; }
+.privacy-page :deep(.site-header), .privacy-page :deep(#header-navigation) { background-color: var(--color-site-surface); }
 </style>

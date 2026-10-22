@@ -8,7 +8,7 @@ const category=computed(()=>catalog.value?.settings.categories.find(c=>c.id===pr
 const activeServices=computed(()=>services.value.cards.filter(c=>props.object.serviceIds.includes(c.id)))
 </script>
 <template>
- <div class="min-h-screen bg-white text-[#203e63]">
+ <div class="min-h-screen bg-white text-site-ink">
   <Header @request="navigateTo('/#contacts')" />
   <main class="pb-16 pt-6 tablet:pb-24 desktop:pt-10">
    <div class="mx-auto max-w-480 px-5 tablet:px-8 desktop:px-[min(4.95%,95.04px)]">
@@ -21,7 +21,7 @@ const activeServices=computed(()=>services.value.cards.filter(c=>props.object.se
     <img v-if="object.imagePath" :src="mediaUrl(object.imagePath)" :alt="object.title" width="900" height="675" class="hidden aspect-[4/3] w-full rounded-[40px] object-cover desktop:block" />
    </div>
    </div>
-   <div class="mt-16 bg-[#f8f9fa] tablet:mt-24">
+   <div class="mt-16 bg-site-surface tablet:mt-24">
     <ObjectsEquipment :object-id="object.id" />
     <ObjectsServices :cards="activeServices" />
    </div>

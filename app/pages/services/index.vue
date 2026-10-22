@@ -6,7 +6,7 @@ useHead({ title: () => `${services.value.title} · Ветро`, meta: [{ name: '
 </script>
 
 <template>
-  <div class="services-page min-h-screen bg-[#f7f8fa] text-[#203e63]">
+  <div class="services-page min-h-screen bg-site-surface text-site-ink">
     <Header @request="navigateTo('/#contacts')" />
     <main aria-labelledby="services-title" class="mx-auto max-w-480 px-5 pb-16 pt-12 tablet:px-8 tablet:pb-24 tablet:pt-16 desktop:px-[4.95%] desktop:pb-24 desktop:pt-20">
       <ServicesTitleAndText :title="services.title" :text="services.text" />
@@ -19,7 +19,7 @@ useHead({ title: () => `${services.value.title} · Ветро`, meta: [{ name: '
 
 <style scoped>
 .services-page { font-family: Montserrat, sans-serif; }
-.services-page :deep(.site-header), .services-page :deep(#header-navigation) { background-color: #f7f8fa; }
+.services-page :deep(.site-header), .services-page :deep(#header-navigation) { background-color: var(--color-site-surface); }
 .services-page :deep(.services-intro), .services-page :deep(.service-card), .services-page :deep(.help-card) { animation: services-appear 650ms ease both; animation-delay: var(--reveal-delay, 0ms); }
 @keyframes services-appear { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) { .services-page :deep(.services-intro), .services-page :deep(.service-card), .services-page :deep(.help-card) { animation: none; } }

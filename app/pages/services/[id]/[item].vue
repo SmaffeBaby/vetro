@@ -18,7 +18,7 @@ useHead({ title: () => `${item.value?.detailTitle} · Ветро`, meta: [{ name
 </script>
 
 <template>
-  <div v-if="item && service" class="service-item-page min-h-screen bg-[#f7f8fa] text-[#203e63]">
+  <div v-if="item && service" class="service-item-page min-h-screen bg-site-surface text-site-ink">
     <Header @request="navigateTo('/#contacts')" />
     <main>
       <section class="relative overflow-hidden" aria-labelledby="service-detail-title">
@@ -37,5 +37,5 @@ useHead({ title: () => `${item.value?.detailTitle} · Ветро`, meta: [{ name
 
 <style scoped>
 .service-item-page { font-family: Montserrat, sans-serif; }
-.service-item-page :deep(.site-header), .service-item-page :deep(#header-navigation) { background-color: #f7f8fa; }
+.service-item-page :deep(.site-header), .service-item-page :deep(#header-navigation) { background-color: var(--color-site-surface); }
 </style>

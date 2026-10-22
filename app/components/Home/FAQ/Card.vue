@@ -6,7 +6,7 @@ const iconSrc = (item: FaqBenefit) => item.iconPath ? mediaUrl(item.iconPath) : 
 </script>
 
 <template>
-  <aside aria-label="Наши преимущества" class="min-w-0 rounded-[20px] bg-linear-to-br from-[#2a9ccf] to-[#76dcf6] p-7 text-white tablet:p-10">
+  <aside aria-label="Наши преимущества" class="min-w-0 rounded-[20px] bg-linear-to-r from-site-brand to-site-brand-light p-7 text-white tablet:p-10">
     <ul class="space-y-10 tablet:space-y-12">
       <li v-for="item in benefits" :key="item.id" class="flex items-start gap-4">
         <img v-if="item.svg" :src="iconSrc(item)" alt="" aria-hidden="true" width="24" height="24" class="mt-1.5 block size-6 shrink-0 object-contain">

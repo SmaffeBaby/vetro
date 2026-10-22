@@ -7,7 +7,7 @@ const { data: team } = await useFetch<ServicesTeamSettings>('/api/services-team'
 const cards = computed(() => sortTeamCards(team.value.cards))
 </script>
 <template>
- <section v-if="cards.length" :aria-labelledby="regionId" class="min-w-0 text-[#203e63]" :class="embedded ? '' : 'mx-auto max-w-480 px-5 pb-16 tablet:px-8 tablet:pb-24 desktop:px-[4.95%] desktop:pb-32'">
+ <section v-if="cards.length" :aria-labelledby="regionId" class="min-w-0 text-site-ink" :class="embedded ? '' : 'mx-auto max-w-480 px-5 pb-16 tablet:px-8 tablet:pb-24 desktop:px-[4.95%] desktop:pb-32'">
   <SharedCardSlider :items="cards" :title="title ?? team.title" :description="description ?? team.description" :region-id="regionId" item-class="basis-[85%] ps-5 tablet:basis-1/2 desktop:basis-1/4" previous-label="Предыдущие сотрудники" next-label="Следующие сотрудники"><template #default="{item}"><ServicesTeamSliderCard :card="item" /></template></SharedCardSlider>
  </section>
 </template>

@@ -5,7 +5,7 @@ const cards = computed(() => sortWhyCards(why.value.cards))
 </script>
 
 <template>
-  <section v-if="cards.length" id="why" aria-labelledby="why-title" class="site-why mx-auto max-w-480 px-5 pb-16 text-[#203e63] tablet:px-8 tablet:pb-24 desktop:px-[4.95%] desktop:pb-32">
+  <section v-if="cards.length" id="why" aria-labelledby="why-title" class="site-why mx-auto max-w-480 px-5 pb-16 text-site-ink tablet:px-8 tablet:pb-24 desktop:px-[4.95%] desktop:pb-32">
     <SectionTitle id="why-title" text="Почему мы?" />
     <WhyCards :cards="cards" class="mt-10 tablet:mt-12" />
   </section>

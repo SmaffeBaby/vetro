@@ -5,7 +5,7 @@ const icon = useSkillIcon(() => props.card)
 </script>
 
 <template>
-  <article tabindex="0" role="listitem" :data-active="active" :aria-labelledby="`skill-title-${card.id}`" class="skill-card min-w-0 rounded-xl border-2 border-[#ededed] bg-white p-7 outline-offset-4 focus-visible:outline-2 focus-visible:outline-[#2a9ccf] desktop:p-[clamp(18px,1.5625vw,30px)]">
+  <article tabindex="0" role="listitem" :data-active="active" :aria-labelledby="`skill-title-${card.id}`" class="skill-card min-w-0 rounded-xl border-2 border-site-line bg-white p-7 outline-offset-4 focus-visible:outline-2 focus-visible:outline-site-brand desktop:p-[clamp(18px,1.5625vw,30px)]">
     <img :src="icon" alt="" aria-hidden="true" width="48" height="48" class="mb-6 block size-12 object-contain">
     <h3 :id="`skill-title-${card.id}`" class="skill-card-title whitespace-pre-line text-xl font-bold leading-[1.4]">{{ card.title }}</h3>
     <div class="skill-card-description">

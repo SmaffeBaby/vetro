@@ -6,7 +6,7 @@ useHead({ title: () => `${content.value.title} · Ветро`, meta: [{ name: 'd
 </script>
 
 <template>
-  <div class="about-page min-h-screen bg-white text-[#203e63]">
+  <div class="about-page min-h-screen bg-white text-site-ink">
     <Header @request="navigateTo('/contacts#write-us')" />
     <main class="mx-auto max-w-480 px-5 pb-16 pt-6 tablet:px-8 tablet:pb-24 desktop:px-[4.95%] desktop:pt-10">
       <AboutHero :content="content" />

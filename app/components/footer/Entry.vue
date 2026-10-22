@@ -9,8 +9,8 @@ const external = computed(() => /^https?:\/\//i.test(props.item.href))
 <template>
   <div class="min-w-0 whitespace-pre-line [overflow-wrap:anywhere]">
     <FooterCode v-if="item.mode === 'code'" :code="item.code" :year="year" />
-    <template v-else-if="item.mode === 'link' && parts">{{ footerYearText(parts.before, year) }}<a :href="item.href" :target="external ? '_blank' : undefined" :rel="external ? 'noopener noreferrer' : undefined" class="text-[#2a9ccf] hover:underline">{{ footerYearText(parts.word, year) }}</a>{{ footerYearText(parts.after, year) }}</template>
-    <a v-else-if="item.mode === 'link'" :href="item.href" :target="external ? '_blank' : undefined" :rel="external ? 'noopener noreferrer' : undefined" class="transition-colors hover:text-[#2a9ccf]">{{ footerYearText(item.text, year) }}</a>
+    <template v-else-if="item.mode === 'link' && parts">{{ footerYearText(parts.before, year) }}<a :href="item.href" :target="external ? '_blank' : undefined" :rel="external ? 'noopener noreferrer' : undefined" class="text-site-brand hover:underline">{{ footerYearText(parts.word, year) }}</a>{{ footerYearText(parts.after, year) }}</template>
+    <a v-else-if="item.mode === 'link'" :href="item.href" :target="external ? '_blank' : undefined" :rel="external ? 'noopener noreferrer' : undefined" class="transition-colors hover:text-site-brand">{{ footerYearText(item.text, year) }}</a>
     <span v-else>{{ footerYearText(item.text, year) }}</span>
   </div>
 </template>

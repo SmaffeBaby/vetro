@@ -9,11 +9,11 @@ const iconSrc = (card: WhyCard) => card.iconPath ? mediaUrl(card.iconPath) : `da
 <template>
   <li class="why-card min-w-0" :data-active="active" @pointerenter="interactive && $event.pointerType !== 'touch' && emit('select')" @focusin="interactive && emit('select')">
     <h3><component :is="interactive ? 'button' : 'span'" :id="`why-trigger-${card.id}`" :type="interactive ? 'button' : undefined" :aria-expanded="interactive ? active : undefined" :aria-controls="interactive ? `why-text-${card.id}` : undefined" class="why-trigger w-full text-left font-bold leading-[1.4]">
-      <span aria-hidden="true" class="why-icon flex items-center justify-center rounded-full bg-[#2a9ccf]"><img v-if="card.svg" :src="iconSrc(card)" alt="" width="32" height="32" class="size-8 object-contain"></span>
+      <span aria-hidden="true" class="why-icon flex items-center justify-center rounded-full bg-site-brand"><img v-if="card.svg" :src="iconSrc(card)" alt="" width="32" height="32" class="size-8 object-contain"></span>
       <span class="why-title block min-w-0 whitespace-pre-line [overflow-wrap:anywhere]">{{ card.title }}</span>
     </component></h3>
     <div :id="`why-text-${card.id}`" role="region" :aria-labelledby="`why-trigger-${card.id}`" :aria-hidden="!active" :inert="!active" class="why-description">
-      <div class="min-h-0 overflow-hidden"><ul class="space-y-4 pt-6"><li v-for="(point, index) in card.points" :key="index" class="relative pl-4 text-base font-semibold leading-[1.45] before:absolute before:left-0 before:top-[0.6em] before:size-[5px] before:rounded-full before:bg-[#2a9ccf]"><span class="whitespace-pre-line [overflow-wrap:anywhere]">{{ point }}</span></li></ul></div>
+      <div class="min-h-0 overflow-hidden"><ul class="space-y-4 pt-6"><li v-for="(point, index) in card.points" :key="index" class="relative pl-4 text-base font-semibold leading-[1.45] before:absolute before:left-0 before:top-[0.6em] before:size-[5px] before:rounded-full before:bg-site-brand"><span class="whitespace-pre-line [overflow-wrap:anywhere]">{{ point }}</span></li></ul></div>
     </div>
     <WhyDivider />
   </li>
@@ -25,7 +25,7 @@ const iconSrc = (card: WhyCard) => card.iconPath ? mediaUrl(card.iconPath) : `da
 .why-trigger { display: grid; grid-template-columns: var(--icon) minmax(0, 1fr); gap: var(--gap); align-items: start; }
 .why-icon { width: var(--icon); height: var(--icon); }
 .why-title { font-size: clamp(17px, 1.041667vw, 20px); }
-.why-trigger:focus-visible { outline: 2px solid #2a9ccf; outline-offset: 6px; border-radius: 4px; }
+.why-trigger:focus-visible { outline: 2px solid var(--color-site-brand); outline-offset: 6px; border-radius: 4px; }
 .why-description { display: grid; grid-template-rows: 0fr; opacity: 0; transform: translateY(8px); margin-left: calc(var(--icon) + var(--gap) - 16px); transition: grid-template-rows 380ms ease, opacity 300ms ease, transform 380ms ease; }
 .why-card[data-active="true"] .why-description { grid-template-rows: 1fr; opacity: 1; transform: translateY(0); }
 .why-card:last-child :deep(.why-divider) { display: none; }

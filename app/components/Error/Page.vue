@@ -5,7 +5,7 @@ const emit = defineEmits<{ navigate: [href: string] }>()
 </script>
 
 <template>
-  <main class="error-page relative isolate flex min-h-svh flex-col justify-center overflow-hidden bg-[#f7f8fa] text-[#203e63]" aria-labelledby="error-title">
+  <main class="error-page relative isolate flex min-h-svh flex-col justify-center overflow-hidden bg-site-surface text-site-ink" aria-labelledby="error-title">
     <ErrorBackground v-if="content.showLogo" />
     <div class="relative z-10 mx-auto w-full max-w-480 px-5 pb-40 pt-16 tablet:px-8 tablet:pb-52 tablet:pt-24 desktop:px-[11%] desktop:pb-[max(200px,16vh)] desktop:pt-[max(100px,16vh)]">
       <p class="text-[clamp(120px,16vw,240px)] font-bold leading-none tracking-tight" aria-label="Код ошибки">{{ code }}</p>

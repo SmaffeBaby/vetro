@@ -2,6 +2,25 @@
 @import "#vetro/breakpoints.css";
 @import "@nuxt/ui";
 
+/* Brand palette; the remaining semantic colors are derived from these swatches. */
+@theme {
+  --color-site-brand: #2a9ccf;
+  --color-site-brand-light: #7adbfa;
+  --color-site-ink: #1d395b;
+  --color-site-charcoal: #353738;
+  --color-site-line: #e7ebf0;
+  --color-site-disabled: #afafaf;
+  --color-site-surface: color-mix(in srgb, var(--color-site-line) 25%, white);
+  --color-site-muted: color-mix(in srgb, var(--color-site-ink) 30%, var(--color-site-disabled));
+  --color-site-brand-tint: color-mix(in srgb, var(--color-site-brand-light) 14%, white);
+  --color-site-brand-border: color-mix(in srgb, var(--color-site-brand) 35%, var(--color-site-line));
+  --color-site-brand-hover: color-mix(in srgb, var(--color-site-brand) 85%, var(--color-site-ink));
+  --color-site-brand-active: color-mix(in srgb, var(--color-site-brand) 70%, var(--color-site-ink));
+  --color-site-on-dark: var(--color-site-line);
+}
+
+:root { --site-gradient: linear-gradient(to right, var(--color-site-brand), var(--color-site-brand-light)); }
+
 @font-face {
   font-family: Montserrat;
   src: url('/fonts/Montserrat-Variable.ttf') format('truetype');
@@ -10,15 +29,41 @@
   font-display: swap;
 }
 
-:root { color-scheme: light; background: white; color: #0f172a; }
+:root { color-scheme: light; background: white; color: var(--color-site-charcoal); }
 body { margin: 0; min-width: 320px; }
 button, a, input, textarea { -webkit-tap-highlight-color: transparent; }
 button:not(:disabled) { cursor: pointer; }
 .site-header { font-family: Montserrat, sans-serif; }
 .site-header a:focus-visible, .site-header button:focus-visible {
-  outline: 2px solid #2a9ccf;
+  outline: 2px solid var(--color-site-brand);
   outline-offset: 5px;
 }
 .site-header-menu-link { font-size: clamp(14px, 1.041667vw, 20px); line-height: normal; }
 .site-header-nav { column-gap: clamp(14px, 1.5625vw, 30px); }
 .site-header-cta { width: clamp(240px, 14.270834vw, 274px); }
+
+/* Shared states live outside the utility layer to override individual color utilities. */
+.site-outline-button { color: var(--color-site-brand); border-color: var(--color-site-brand); transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease; }
+.site-outline-button:focus-visible { background: var(--color-site-brand); color: white; }
+.site-outline-button:active { background: var(--color-site-brand-active); color: white; }
+.site-outline-button:focus-visible, .site-header-cta:focus-visible { outline: 2px solid var(--color-site-brand); outline-offset: 4px; }
+
+.brand-gradient-hover { position: relative; isolation: isolate; }
+.brand-gradient-hover::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--site-gradient); opacity: 0; transition: opacity 250ms ease; pointer-events: none; }
+.brand-gradient-hover, .brand-gradient-hover p, .brand-gradient-hover dt, .brand-gradient-hover dd, .service-card-icon, .object-card-title { transition: color 250ms ease, background-color 250ms ease; }
+.service-card-link:focus-visible::before { opacity: 1; }
+.service-card-link:focus-visible, .service-card-link:focus-visible p { color: white; }
+.service-card-link:focus-visible .service-card-icon { background-color: white; }
+.object-card:focus-within .object-card-title { color: var(--color-site-brand); }
+
+@media (hover: hover) and (pointer: fine) {
+  .site-outline-button:hover { background: var(--color-site-brand); color: white; }
+  .brand-gradient-hover:hover::before { opacity: 1; }
+  .brand-gradient-hover:hover, .brand-gradient-hover:hover p, .brand-gradient-hover:hover dt, .brand-gradient-hover:hover dd { color: white; }
+  .service-card-link:hover .service-card-icon { background-color: white; }
+  .object-card:hover .object-card-title { color: var(--color-site-brand); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-outline-button, .brand-gradient-hover, .brand-gradient-hover::before, .brand-gradient-hover p, .brand-gradient-hover dt, .brand-gradient-hover dd, .service-card-icon, .object-card-title { transition: none; }
+}

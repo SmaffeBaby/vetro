@@ -16,12 +16,12 @@ const emit = defineEmits<{ select: [] }>()
 <style scoped>
 @reference "../../../assets/css/main.css";
 .work-card { --counter: clamp(40px, 2.916667vw, 56px); --card-gap: clamp(12px, 1.25vw, 24px); padding: clamp(20px, 1.458333vw, 28px); border-radius: 12px; cursor: pointer; transition: flex-grow 420ms ease, box-shadow 300ms ease; }
-.work-card[data-active="true"] { box-shadow: 0 0 0 2px #ededed; }
+.work-card[data-active="true"] { box-shadow: 0 0 0 2px var(--color-site-line); }
 .work-trigger { gap: var(--card-gap); }
-.work-trigger:focus-visible { outline: 2px solid #2a9ccf; outline-offset: 6px; border-radius: 4px; }
+.work-trigger:focus-visible { outline: 2px solid var(--color-site-brand); outline-offset: 6px; border-radius: 4px; }
 .work-title { font-size: clamp(16px, 1.041667vw, 20px); }
-.work-number { width: var(--counter); height: var(--counter); color: #94a3b8; border-color: #b9cefc; background: #f5f6f8; font-size: clamp(24px, 1.666667vw, 32px); transition: color 300ms ease, background-color 300ms ease, border-color 300ms ease; }
-.work-card[data-active="true"] .work-number { color: white; border-color: #2a9ccf; background: #2a9ccf; }
+.work-number { width: var(--counter); height: var(--counter); color: var(--color-site-muted); border-color: var(--color-site-brand-border); background: var(--color-site-surface); font-size: clamp(24px, 1.666667vw, 32px); transition: color 300ms ease, background-color 300ms ease, border-color 300ms ease; }
+.work-card[data-active="true"] .work-number { color: white; border-color: var(--color-site-brand); background: var(--color-site-brand); }
 .work-description { display: grid; grid-template-rows: 0fr; opacity: 0; transform: translateY(8px); margin-left: calc(var(--counter) + var(--card-gap)); transition: grid-template-rows 380ms ease, opacity 300ms ease, transform 380ms ease; }
 .work-card[data-active="true"] .work-description { grid-template-rows: 1fr; opacity: 1; transform: translateY(0); }
 @media (max-width: 1199px), (hover: none), (pointer: coarse) {
