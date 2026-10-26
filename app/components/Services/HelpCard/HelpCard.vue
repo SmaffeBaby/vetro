@@ -2,4 +2,4 @@
 const { data: help } = await useServicesHelpCard()
 const emit = defineEmits<{ request: [] }>()
 </script>
-<template><SharedContactCard :content="help" heading-id="services-help-card-title" @request="emit('request')" /></template>
+<template><SharedContactCard class="services-help-card" :content="help" heading-id="services-help-card-title" @request="emit('request')" /></template>
