@@ -13,7 +13,7 @@ useHead({ title: () => `${detail.value?.title} · Ветро`, meta: [{ name: 'd
 <template>
   <div class="service-detail-page min-h-screen bg-site-surface text-site-ink">
     <Header @request="navigateTo('/#contacts')" />
-    <main><ServicesDetailServices v-if="detail" :detail="detail" @request="navigateTo('/#contacts')" /><ServicesDetailServicesIncluded :current-service-id="id" /><ServicesDetailServicesObjects :current-service-id="id" class="pt-16 tablet:pt-24" /><ServicesDetailServicesWhyUs /><ServicesTeamSlider /><ServicesDetailServicesPriceList :current-service-id="id" @request="navigateTo('/#contacts')" /><ServicesDetailServicesRequestCard :current-service-id="id" @request="navigateTo('/#contacts')" /><ServicesDetailServicesOtherServices :current-service-id="id" /></main>
+    <main><ServicesDetailServices v-if="detail" :detail="detail" @request="navigateTo('/#contacts')" /><ServicesDetailServicesIncluded :current-service-id="id" /><ServicesDetailServicesObjects :current-service-id="id" class="pt-16 tablet:pt-24" /><ServicesDetailServicesWhyUs /><ServicesTeamSlider /><ServicesDetailServicesWhyUs variant="metrics" /><ServicesDetailServicesPriceList :current-service-id="id" @request="navigateTo('/#contacts')" /><ServicesDetailServicesRequestCard :current-service-id="id" @request="navigateTo('/#contacts')" /><ServicesDetailServicesOtherServices :current-service-id="id" /></main>
     <Footer @request="navigateTo('/#contacts')" />
   </div>
 </template>

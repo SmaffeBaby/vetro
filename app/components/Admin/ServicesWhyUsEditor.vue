@@ -24,6 +24,18 @@ const { form, loading, saving, loaded, error, notice, isDirty, updatedLabel, loa
           </UCard>
           <p v-if="!form.cards.length" class="rounded-xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500">Карточек пока нет. Пустой блок не отображается на сайте.</p>
           <UButton label="Добавить карточку" icon="i-lucide-plus" color="neutral" variant="outline" :disabled="form.cards.length >= 12" @click="addCard" />
+          <UCard>
+            <template #header><h2 class="font-semibold">Почему выбирают нас — показатели после команды</h2></template>
+            <div class="space-y-6">
+              <UFormField label="Заголовок блока показателей"><UTextarea v-model="form.metricsTitle" :rows="2" maxlength="240" class="w-full" /></UFormField>
+              <fieldset v-for="(metric, index) in form.metrics" :key="metric.id" class="space-y-4 rounded-xl border border-slate-200 p-4">
+                <legend class="px-2 text-sm font-semibold">Показатель {{ index + 1 }}</legend>
+                <UFormField label="Значение"><UInput v-model="metric.title" maxlength="100" class="w-full" /></UFormField>
+                <UFormField label="Подпись"><UInput v-model="metric.caption" maxlength="240" class="w-full" /></UFormField>
+                <UFormField label="Описание"><UTextarea v-model="metric.description" :rows="3" maxlength="4000" class="w-full" /></UFormField>
+              </fieldset>
+            </div>
+          </UCard>
           <div class="flex flex-wrap items-center justify-between gap-4 pb-4"><p class="text-xs text-slate-400">Сохранено: {{ updatedLabel }}</p><UButton type="submit" label="Сохранить изменения" :loading="saving" :disabled="!isDirty" /></div>
         </fieldset>
       </form>
