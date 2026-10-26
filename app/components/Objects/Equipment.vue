@@ -5,7 +5,7 @@ const props=defineProps<{objectId:string}>()
 const {data:equipment}=await useFetch<ObjectEquipmentSettings>(`/api/object-equipment/${encodeURIComponent(props.objectId)}`,{key:`site-object-equipment-${props.objectId}`,default:()=>createDefaultObjectEquipment(props.objectId)})
 </script>
 <template>
- <section v-if="equipment.enabled" aria-labelledby="object-equipment-title" class="bg-site-surface py-14 text-site-ink tablet:py-24">
+ <section v-if="equipment.enabled" aria-labelledby="object-equipment-title" class="object-equipment bg-site-surface py-14 text-site-ink tablet:py-24">
   <div class="mx-auto max-w-480 px-5 tablet:px-8 desktop:px-[min(4.95%,95.04px)]">
    <h2 id="object-equipment-title" class="whitespace-pre-line text-[32px] font-bold leading-[1.1] [overflow-wrap:anywhere] tablet:text-[40px] desktop:text-[clamp(40px,2.9167vw,56px)]">{{equipment.title}}</h2>
    <div v-if="equipment.rows.length" role="region" aria-label="Таблица оборудования" tabindex="0" class="mt-10 overflow-x-auto rounded-[20px] border border-site-line focus-visible:outline-2 focus-visible:outline-site-brand tablet:mt-16">

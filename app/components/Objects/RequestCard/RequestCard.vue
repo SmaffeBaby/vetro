@@ -4,4 +4,4 @@ import { defaultObjectsRequestCard } from '#shared/config/default-objects-reques
 const {data:content}=await useFetch<ServicesHelpCardSettings>('/api/objects-request-card',{key:'site-objects-request-card',default:()=>structuredClone(defaultObjectsRequestCard)})
 const emit=defineEmits<{request:[]}>()
 </script>
-<template><SharedContactCard :content="content" heading-id="objects-request-card-title" @request="emit('request')" /></template>
+<template><SharedContactCard class="object-request" :content="content" heading-id="objects-request-card-title" @request="emit('request')" /></template>
