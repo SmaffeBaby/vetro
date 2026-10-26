@@ -13,4 +13,9 @@ const cards = computed(() => sortWhyCards(why.value.cards))
 
 <style scoped>
 .site-why { font-family: Montserrat, sans-serif; }
+@media (max-width: 767px) {
+  .site-why { padding-inline: 10px; padding-bottom: 56px; }
+  .site-why :deep(h2) { font-size: 32px; }
+}
+@media (max-width: 1199px) { .site-why :deep([role="group"]) { margin-top: 8px; } }
 </style>

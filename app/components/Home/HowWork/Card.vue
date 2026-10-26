@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { WorkCard } from '#shared/types/how-work.ts'
 withDefaults(defineProps<{ card: WorkCard; number: number; active: boolean; interactive?: boolean }>(), { interactive: true })
-const emit = defineEmits<{ select: [] }>()
+const emit = defineEmits<{ toggle: [] }>()
 </script>
 
 <template>
-  <li class="work-card min-w-0" :data-active="active" @pointerenter="interactive && $event.pointerType !== 'touch' && emit('select')" @focusin="interactive && emit('select')">
-    <h3><component :is="interactive ? 'button' : 'span'" :id="`work-trigger-${card.id}`" :type="interactive ? 'button' : undefined" :aria-expanded="interactive ? active : undefined" :aria-controls="interactive ? `work-text-${card.id}` : undefined" class="work-trigger flex w-full items-start text-left font-bold leading-[1.4]"><span aria-hidden="true" class="work-number flex shrink-0 items-center justify-center rounded-full border-2 font-bold leading-none">{{ number }}</span><span class="work-title min-w-0 whitespace-pre-line [overflow-wrap:anywhere]">{{ card.title }}</span></component></h3>
+  <li class="work-card min-w-0" :data-active="active">
+    <h3><component :is="interactive ? 'button' : 'span'" :id="`work-trigger-${card.id}`" :type="interactive ? 'button' : undefined" :aria-expanded="interactive ? active : undefined" :aria-controls="interactive ? `work-text-${card.id}` : undefined" @click="emit('toggle')" class="work-trigger flex w-full items-start text-left font-bold leading-[1.4]"><span aria-hidden="true" class="work-number flex shrink-0 items-center justify-center rounded-full border-2 font-bold leading-none">{{ number }}</span><span class="work-title min-w-0 whitespace-pre-line [overflow-wrap:anywhere]">{{ card.title }}</span><UIcon name="i-lucide-chevron-down" aria-hidden="true" class="disclosure-chevron ml-auto size-4 shrink-0 desktop:hidden" :class="{ 'rotate-180': active }" /></component></h3>
     <div :id="`work-text-${card.id}`" role="region" :aria-labelledby="`work-trigger-${card.id}`" :aria-hidden="!active" :inert="!active" class="work-description">
       <div class="min-h-0 overflow-hidden"><p class="whitespace-pre-line pt-6 text-base font-medium leading-[1.25] [overflow-wrap:anywhere]">{{ card.text }}</p></div>
     </div>
@@ -37,4 +37,16 @@ const emit = defineEmits<{ select: [] }>()
   .work-description { margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .work-card, .work-number, .work-description { transition: none; transform: none; } }
+
+@media (max-width: 1199px) {
+  .work-card { --counter: 56px; --card-gap: 10px; padding: 16px; border: 2px solid var(--color-site-line); }
+  .work-card[data-active="true"] { box-shadow: none; }
+  .work-trigger { align-items: center; cursor: pointer; }
+  .work-title { font-size: 20px; }
+  .work-number { background: var(--color-site-brand); border-color: var(--color-site-brand); color: white; font-size: 32px; }
+  .work-description { margin-left: 0; transition: grid-template-rows 300ms ease, opacity 250ms ease, transform 300ms ease; }
+  .work-description p { padding-top: 12px; }
+}
+.disclosure-chevron { transition: transform 250ms ease; }
+@media (prefers-reduced-motion: reduce) { .work-description, .disclosure-chevron { transition: none; } }
 </style>

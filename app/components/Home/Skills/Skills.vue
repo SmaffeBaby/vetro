@@ -11,4 +11,8 @@ const { data: skills } = await useSkills()
 
 <style scoped>
 .site-skills { font-family: Montserrat, sans-serif; }
+@media (max-width: 767px) {
+  .site-skills { padding: 16px 10px 40px; gap: 30px; }
+  .site-skills :deep(#skills-title) { font-size: 32px; }
+}
 </style>

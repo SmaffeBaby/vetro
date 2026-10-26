@@ -16,4 +16,10 @@ const { data: license } = await useLicense()
 
 <style scoped>
 .site-license { font-family: Montserrat, sans-serif; }
+@media (max-width: 767px) {
+  .site-license { margin-inline: -20px; padding: 36px 24px; text-align: center; }
+  .site-license h2 { font-size: 32px; line-height: 1.05; }
+  .site-license > div { margin-top: 24px; gap: 24px; }
+  .site-license img { width: 174px; max-height: 252px; }
+}
 </style>

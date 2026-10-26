@@ -10,7 +10,7 @@ const iconSrc = (item: ContactItem) => item.iconPath ? mediaUrl(item.iconPath) :
 <template>
   <div class="min-w-0 px-6 py-8 tablet:p-10">
     <h2 id="contacts-title" class="mb-8 text-[30px] font-bold uppercase leading-tight">Контакты</h2>
-    <ul class="space-y-8">
+    <ul class="space-y-5 tablet:space-y-8">
       <li v-for="item in items" :key="item.id" class="flex items-start gap-6">
         <div v-if="item.svg" class="flex size-14 shrink-0 items-center justify-center rounded-full bg-site-brand-tint"><img :src="iconSrc(item)" alt="" aria-hidden="true" width="32" height="32" class="block size-8 object-contain"></div>
         <div class="min-w-0"><h3 class="mb-1 whitespace-pre-line text-xl font-bold leading-tight [overflow-wrap:anywhere]">{{ item.title }}</h3><FooterEntry :item="item" :year="year" class="text-base leading-[1.4]" /></div>

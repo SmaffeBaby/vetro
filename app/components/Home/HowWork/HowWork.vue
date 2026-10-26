@@ -13,4 +13,9 @@ const cards = computed(() => sortWorkCards(work.value.cards))
 
 <style scoped>
 .site-how-work { font-family: Montserrat, sans-serif; }
+@media (max-width: 767px) {
+  .site-how-work { padding-inline: 10px; padding-bottom: 56px; }
+  .site-how-work :deep(h2) { font-size: 32px; }
+}
+@media (max-width: 1199px) { .site-how-work :deep(.work-cards-row) { border: 0; gap: 6px; } }
 </style>
