@@ -20,7 +20,7 @@ onBeforeUnmount(() => carousel.value?.emblaApi?.off('reInit',updateControls))
     <button type="button" :aria-label="nextLabel" class="carousel-arrow" :disabled="!canScrollNext" @click="scrollNext"><span class="carousel-arrow-icon carousel-arrow-right" aria-hidden="true" /></button>
    </div>
   </div>
-  <UCarousel ref="carousel" :items="props.items" align="start" :loop="false" @select="updateControls" :aria-label="title" class="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-site-brand" :class="carouselClass" :ui="{viewport:'cursor-grab active:cursor-grabbing',container:'items-stretch -ms-5',item:itemClass}">
+  <UCarousel ref="carousel" :items="props.items" align="start" :loop="false" @select="updateControls" :aria-label="title" class="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-site-brand" :class="carouselClass" :ui="{viewport:'cursor-grab active:cursor-grabbing',container:'slider-track items-stretch -ms-5',item:`slider-item ${itemClass}`}">
    <template #default="{ item }"><slot :item="item as T" /></template>
   </UCarousel>
  </div>
