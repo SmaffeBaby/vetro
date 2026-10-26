@@ -5,5 +5,5 @@ const { data: content } = await useFetch<ServicesHelpCardSettings>('/api/about-p
 </script>
 
 <template>
-  <SharedContactCard :content="content" heading-id="about-project-title" variant="centered" class="mt-16 tablet:mt-20" @request="navigateTo('/contacts#write-us')" />
+  <SharedContactCard :content="content" heading-id="about-project-title" variant="centered" class="about-project mt-16 tablet:mt-20" @request="navigateTo('/contacts#write-us')" />
 </template>
