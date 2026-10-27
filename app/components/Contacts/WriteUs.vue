@@ -20,7 +20,7 @@ const inputClass = 'min-h-12 w-full rounded-lg border border-site-line bg-white 
           </div>
           <div class="min-w-0">
             <label for="contact-form-subject" class="mb-2 block text-sm font-semibold text-site-charcoal">{{ content.fields.subject.label }}<span v-if="content.fields.subject.required" aria-hidden="true">*</span></label>
-            <select id="contact-form-subject" name="subject" :required="content.fields.subject.required" :class="inputClass" class="pr-10">
+            <select id="contact-form-subject" name="subject" :required="content.fields.subject.required" :class="inputClass" class="site-select">
               <option value="" disabled selected>{{ content.fields.subject.placeholder }}</option>
               <option v-for="topic in content.topics" :key="topic" :value="topic">{{ topic }}</option>
             </select>

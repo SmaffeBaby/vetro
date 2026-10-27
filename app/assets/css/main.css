@@ -94,3 +94,8 @@ button:not(:disabled) { cursor: pointer; }
 @media (max-width: 1199px) and (prefers-reduced-motion: reduce) {
   .site-mobile-menu, .site-mobile-menu .site-header-menu-link, .site-mobile-menu .site-mobile-menu-cta { transition: none; transform: none; }
 }
+
+/* Preserve native select behavior while keeping chevrons consistently inset. */
+.site-select { appearance: none; -webkit-appearance: none; padding-right: 48px; background-image: url('/images/shared/chevron-down.svg'); background-repeat: no-repeat; background-position: right 16px center; background-size: 16px 16px; }
+.site-select-on-dark { background-image: url('/images/shared/chevron-down-white.svg'); }
+@media (forced-colors: active) { .site-select { appearance: auto; background-image: none; padding-right: 16px; } }

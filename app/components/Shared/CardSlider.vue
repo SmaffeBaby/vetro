@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends { id: string }">
-defineSlots<{ default(props: { item: T }): unknown }>()
+defineSlots<{ default(props: { item: T; index: number }): unknown }>()
 const props = withDefaults(defineProps<{ items: T[]; title: string; description?: string; regionId: string; itemClass?: string; carouselClass?: string; previousLabel?: string; nextLabel?: string }>(), { description: '', itemClass: 'basis-[88%] ps-5 tablet:basis-[47%] desktop:basis-[31%]', carouselClass: 'mt-10 rounded-[32px] tablet:mt-14', previousLabel: 'Предыдущие карточки', nextLabel: 'Следующие карточки' })
 const carousel = useTemplateRef('carousel')
 const canScrollPrev = ref(false), canScrollNext = ref(false)
@@ -21,7 +21,7 @@ onBeforeUnmount(() => carousel.value?.emblaApi?.off('reInit',updateControls))
    </div>
   </div>
   <UCarousel ref="carousel" :items="props.items" align="start" :loop="false" @select="updateControls" :aria-label="title" class="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-site-brand" :class="carouselClass" :ui="{viewport:'cursor-grab active:cursor-grabbing',container:'slider-track items-stretch -ms-5',item:`slider-item ${itemClass}`}">
-   <template #default="{ item }"><slot :item="item as T" /></template>
+   <template #default="{ item, index }"><slot :item="item as T" :index="index" /></template>
   </UCarousel>
  </div>
 </template>
