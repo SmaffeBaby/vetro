@@ -51,11 +51,5 @@ useHead({ title: () => `${content.value.title} · Ветро`, meta: [{ name: 'd
   .about-page :deep(.about-project) { margin-inline: -10px; min-height: 450px; border-radius: 40px; padding: 80px 10px; }
   .about-page :deep(.about-project h2 + p) { margin-top: 32px; font-size: 16px; line-height: 1.35; }
   .about-page :deep(.about-project .help-card-button) { width: 100%; min-height: 48px; margin-top: 24px; padding-block: 12px; }
-  .about-page :deep(.site-footer) { text-align: center; }
-  .about-page :deep(.site-footer > div) { padding-inline: 10px; }
-  .about-page :deep(.site-footer p) { margin-inline: auto; }
-  .about-page :deep(.site-footer ul.flex) { justify-content: center; }
-  .about-page :deep(.site-footer .footer-cta) { margin-inline: auto; }
-  .about-page :deep(.footer-columns) { gap: 96px; }
 }
 </style>

@@ -8,11 +8,12 @@ export function usePagedItems<T>(items: MaybeRefOrGetter<readonly T[]>, pageSize
   const totalPages = computed(() => Math.max(1, Math.ceil(total.value / size)))
   const hasMore = computed(() => page.value < totalPages.value)
   const visibleItems = computed(() => toValue(items).slice((firstPage.value - 1) * size, page.value * size))
+  const showPagination = computed(() => visibleItems.value.length < total.value)
   function selectPage(value: number) {
     page.value = Math.min(totalPages.value, Math.max(1, Math.trunc(value)))
     firstPage.value = page.value
   }
   function loadMore() { if (hasMore.value) page.value++ }
   watch(() => toValue(items), () => selectPage(1), { flush: 'sync' })
-  return { page, total, totalPages, hasMore, visibleItems, selectPage, loadMore }
+  return { page, total, totalPages, hasMore, showPagination, visibleItems, selectPage, loadMore }
 }

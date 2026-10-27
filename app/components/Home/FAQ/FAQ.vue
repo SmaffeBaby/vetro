@@ -14,4 +14,10 @@ const { data: faq } = await useFaq()
 
 <style scoped>
 .site-faq { font-family: Montserrat, sans-serif; }
+@media (max-width: 767px) {
+  .site-faq { padding-inline: 10px; padding-bottom: 40px; }
+  .site-faq :deep(#faq-title) { font-size: 32px; }
+  .site-faq > .grid { gap: 40px; }
+  .site-faq :deep(aside) { margin-inline: -10px; padding: 40px; }
+}
 </style>

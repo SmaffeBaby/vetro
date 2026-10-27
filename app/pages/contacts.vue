@@ -35,11 +35,5 @@ useHead({ title: () => `${contacts.value.page.title} · Ветро`, meta: [{ na
   .contacts-page :deep(#contacts-write-us-title + p) { margin-top: 24px; font-size: 18px; line-height: 1.4; }
   .contacts-page :deep(#contact-form-message) { min-height: 120px; }
   .contacts-page :deep(#contact-form-subject:has(option:checked[value=""])) { color: var(--color-site-muted); }
-  .contacts-page :deep(.site-footer) { text-align: center; }
-  .contacts-page :deep(.site-footer > div) { padding-inline: 10px; }
-  .contacts-page :deep(.site-footer p) { margin-inline: auto; }
-  .contacts-page :deep(.site-footer ul.flex) { justify-content: center; }
-  .contacts-page :deep(.site-footer .footer-cta) { margin-inline: auto; }
-  .contacts-page :deep(.footer-columns) { gap: 96px; }
 }
 </style>

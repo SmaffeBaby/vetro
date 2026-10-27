@@ -5,7 +5,7 @@ const category=ref('all')
 const pageSize = 7
 const results = ref<HTMLElement | null>(null)
 const cards=computed(()=>catalog.value?.objects.filter(o=>category.value==='all'||o.categoryId===category.value)||[])
-const { page, total, visibleItems, selectPage, loadMore } = usePagedItems(() => cards.value, pageSize)
+const { page, total, visibleItems, showPagination, selectPage, loadMore } = usePagedItems(() => cards.value, pageSize)
 async function changePage(value: number) {
   selectPage(value)
   await nextTick()
@@ -24,7 +24,7 @@ async function changePage(value: number) {
     <div v-if="cards.length" ref="results" tabindex="-1" role="region" aria-labelledby="objects-catalog-title" class="objects-results mt-8 scroll-mt-28 outline-none">
       <ObjectsGrid :objects="visibleItems" :button-label="catalog.settings.buttonLabel" />
       <p role="status" aria-live="polite" class="sr-only">Показано {{ visibleItems.length }} из {{ total }} объектов. Страница {{ page }}.</p>
-      <SharedPagination :page="page" :total="total" :page-size="pageSize" class="mt-10" @update:page="changePage" @more="loadMore" />
+      <SharedPagination v-if="showPagination" :visible-count="visibleItems.length" :page="page" :total="total" :page-size="pageSize" class="mt-10" @update:page="changePage" @more="loadMore" />
     </div>
     <p v-else class="py-16 text-lg" role="status">В этой категории пока нет объектов.</p>
    </template>
@@ -51,11 +51,5 @@ async function changePage(value: number) {
   .objects-page :deep(.object-card-title) { margin-top: 30px; font-size: 20px; }
   .objects-page :deep(.object-card > div:last-child) { padding-top: 96px; }
   .objects-page :deep(.object-card .site-outline-button) { min-height: 48px; padding-block: 12px; border-radius: 20px; font-size: 16px; }
-  .objects-page :deep(.site-footer) { text-align: center; }
-  .objects-page :deep(.site-footer > div) { padding-inline: 10px; }
-  .objects-page :deep(.site-footer p) { margin-inline: auto; }
-  .objects-page :deep(.site-footer ul.flex) { justify-content: center; }
-  .objects-page :deep(.site-footer .footer-cta) { margin-inline: auto; }
-  .objects-page :deep(.footer-columns) { gap: 96px; }
 }
 </style>

@@ -85,12 +85,6 @@ const activeServices=computed(()=>services.value.cards.filter(c=>props.object.se
   .object-detail-page :deep(.object-request) { margin: 48px -10px 0; padding: 40px 10px; border-radius: 40px; text-align: center; gap: 40px; }
   .object-detail-page :deep(#objects-request-card-title) { font-size: 32px; line-height: 1.05; }
   .object-detail-page :deep(.object-request .help-card-button) { width: 100%; min-height: 60px; margin-top: 24px; }
-  .object-detail-page :deep(.site-footer) { text-align: center; }
-  .object-detail-page :deep(.site-footer > div) { padding-inline: 10px; }
-  .object-detail-page :deep(.site-footer p) { margin-inline: auto; }
-  .object-detail-page :deep(.site-footer ul.flex) { justify-content: center; }
-  .object-detail-page :deep(.site-footer .footer-cta) { margin-inline: auto; }
-  .object-detail-page :deep(.footer-columns) { gap: 96px; }
 }
 @media (max-width: 359px) {
   .object-detail-page :deep(.object-request .help-card-button) { font-size: 14px; gap: 12px; }

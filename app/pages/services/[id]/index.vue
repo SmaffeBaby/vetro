@@ -68,10 +68,6 @@ useHead({ title: () => `${detail.value?.title} · Ветро`, meta: [{ name: 'd
   .service-detail-page :deep(.other-services .service-card-link) { padding: 24px; border-radius: 40px; }
   .service-detail-page :deep(.other-services .service-card-icon) { width: 80px; height: 80px; }
   .service-detail-page :deep(.other-services .service-card-link h3) { font-size: 20px; }
-  .service-detail-page :deep(.site-footer) { text-align: center; }
-  .service-detail-page :deep(.site-footer p) { margin-inline: auto; }
-  .service-detail-page :deep(.site-footer ul.flex) { justify-content: center; }
-  .service-detail-page :deep(.site-footer .footer-cta) { margin-inline: auto; }
 }
 @media (max-width: 359px) {
   .service-detail-page :deep(.included-card) { padding-inline: 24px; }

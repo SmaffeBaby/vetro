@@ -43,4 +43,8 @@ watch(() => costs.value.fields, fields => {
 
 <style scoped>
 .site-costs { font-family: Montserrat, sans-serif; }
+@media (max-width: 767px) {
+  .site-costs { padding: 40px 10px 10px; }
+  .site-costs h2 { font-size: 32px; }
+}
 </style>
