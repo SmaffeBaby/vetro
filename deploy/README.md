@@ -1,37 +1,37 @@
 # Production deployment
 
-Server: `45.12.114.96`. Bootstrap configuration and secrets: `/opt/vetro`. Current deployed sources: `/opt/vetro-current`.
+Site: http://45.12.114.96. Application and secrets: `/opt/vetro`.
+
+## CI/CD
+
+The workflow follows the same approach as MagnatProfessional: sync source with `rsync`, then rebuild the application with Docker Compose on the server.
+
+- Push to `dev` or a pull request to `main`: install dependencies, check TypeScript, build Nuxt.
+- **Push to `main`** (including merging `dev` into `main`): after successful checks, sync source and run `deploy/deploy-production.sh`.
+- Only the application is recreated. Supabase services and data are preserved; migrations are not applied automatically.
+- The server checks the data volume names, waits for application health, verifies the commit SHA, and restores the previous app image if startup validation fails.
+- Production runs are serialized. Environment files, backups, and runtime data are excluded from `rsync --delete`.
+
+GitHub environment: `production`, limited to `main`. Secrets: `PRODUCTION_HOST`, `PRODUCTION_SSH_KEY`, `PRODUCTION_KNOWN_HOSTS`. SSH host keys are pinned. The dedicated deployment key has no PTY or forwarding; it can execute deployment commands on this server. No root password is stored in GitHub or the repository.
 
 ```sh
-cd /opt/vetro-current
+cd /opt/vetro
 set -a
-. ./.release.env
+. ./.deployment.env
 set +a
-docker compose -f docker-compose.yml -f docker-compose.production.yml up -d --no-build --no-deps --wait app
 docker compose -f docker-compose.yml -f docker-compose.production.yml ps
 docker compose -f docker-compose.yml -f docker-compose.production.yml logs --tail=100 app
 curl --fail http://127.0.0.1:3002/api/health
 ```
 
-Nginx uses `deploy/nginx.conf` and forwards port 80 to the app on localhost:3002.
-Supabase gateway and PostgreSQL ports bind only to localhost; Studio is reachable through an SSH tunnel to port 8002 using its dashboard credentials from `supabase/.env`.
+To deploy manually, run `DEPLOY_REVISION=<40-character-commit> bash deploy/deploy-production.sh` after syncing the tracked source. To roll back to the preceding image, export `VETRO_APP_IMAGE=vetro-app:previous`, set `VETRO_REVISION` to its commit, then run `docker compose -f docker-compose.yml -f docker-compose.production.yml up -d --no-build --no-deps --wait app` and update `.deployment.env` accordingly.
 
-Secrets are stored in `.env` and `supabase/.env`, mode 600, excluded from Git.
-The production Supabase URL is `/supabase` on the site's origin. Public registration is disabled; existing administrator accounts are preserved.
+## Server configuration and backups
 
-Initial migration archives: `/opt/vetro-backups`. Daily backups run at 03:15 server time and retain 7 days under `/opt/vetro-backups/daily`. Run manually with `bash /opt/vetro/deploy/backup.sh`. Storage archives preserve extended attributes (MIME type and cache settings); restore using GNU tar with `--xattrs --xattrs-include='*'`. Backups include both databases, roles, Storage files, PostgreSQL key configuration and environment files. Backups contain secrets and remain accessible only to root. Keep an additional copy outside this server for disaster recovery.
+Nginx uses `/etc/nginx/sites-available/vetro` from `deploy/nginx.conf` and forwards port 80 to localhost:3002. Nginx configuration changes are installed and reloaded separately. Supabase gateway and database ports bind only to localhost. Studio can be accessed using an SSH tunnel to port 8002 with credentials from `supabase/.env`.
 
-When adding a domain, update Nginx `server_name`, configure HTTPS, and update `SITE_URL`, `ADDITIONAL_REDIRECT_URLS`, `SUPABASE_PUBLIC_URL`, and `API_EXTERNAL_URL` in `supabase/.env`, then recreate the containers. SMTP requires real provider settings if email invitations or password recovery are needed.
+Secrets in `.env` and `supabase/.env` have mode 600 and are excluded from Git. Public signup is disabled; existing admin accounts are preserved.
 
+Daily backups run at 03:15 Moscow time and retain 7 days under `/opt/vetro-backups/daily`. Run `bash /opt/vetro/deploy/backup.sh` manually. Backups include both databases, roles, Storage files with extended attributes, PostgreSQL key configuration, and environment files. Restore Storage using GNU tar with `--xattrs --xattrs-include='*'`. Keep an additional copy outside this server.
 
-## GitHub Actions
-
-Pushes to `dev` and pull requests to `main` build the application and run TypeScript checks. **Only a push to `main` deploys production**, including a merge into `main` or a direct push. No manual dispatch or deployment from `dev` is configured.
-
-Workflow: `.github/workflows/ci-cd.yml`. The production environment allows only the `main` branch. Environment secrets: `DEPLOY_SSH_KEY` (a dedicated Ed25519 private key) and `DEPLOY_KNOWN_HOSTS` (the server's pinned host key). The key has a forced command and cannot open an interactive shell, forward ports, or run arbitrary SSH commands.
-
-CI transfers a prebuilt Docker image and the tracked source archive. Releases live under `/opt/vetro-releases/<commit>`. The receiver checks archive paths and the image revision, starts only the app, checks database connectivity and the exact revision, and rolls back to the previous image if validation fails. Deployments use a lock and production runs are not canceled mid-deployment. `/api/health` exposes the deployed commit under `revision`.
-
-Supabase data, credentials, and running services are preserved. SQL migrations and Supabase version changes need a separate planned deployment; the application pipeline does not apply migrations automatically. Old images and source releases are retained for rollback. `/opt/vetro-current` points to the last successful release. The production receiver is installed at `/usr/local/sbin/vetro-ci-deploy`; changes to `deploy/ci-deploy.sh` must be installed there by a server administrator.
-
-To roll back manually, change to the previous source directory, load its `.release.env` as above, then run the app-only compose command. Keep `/opt/vetro-current` aligned with the chosen release afterward.
+When adding a domain, update Nginx `server_name`, configure HTTPS, and update `SITE_URL`, `ADDITIONAL_REDIRECT_URLS`, `SUPABASE_PUBLIC_URL`, and `API_EXTERNAL_URL` in `supabase/.env`. SMTP requires real provider settings for email invitations or password recovery.
