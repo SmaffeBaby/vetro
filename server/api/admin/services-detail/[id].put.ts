@@ -1,6 +1,6 @@
 import { servicesDetailInputSchema } from '../../../../shared/utils/services-detail'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const card = await requireServiceCard(client, getRouterParam(event, 'id'))
   const parsed = servicesDetailInputSchema.safeParse(await readBody(event))

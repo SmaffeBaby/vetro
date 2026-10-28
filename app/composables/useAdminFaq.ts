@@ -2,7 +2,7 @@ import type { FaqBenefit, FaqSettings } from '#shared/types/faq'
 import { defaultFaq } from '#shared/config/default-faq'
 import { faqInputSchema } from '#shared/utils/faq'
 export function useAdminFaq() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia('FAQ')
   const form = reactive<FaqSettings>(structuredClone(defaultFaq))
   const loading = ref(true), saving = ref(false), loaded = ref(false)
@@ -15,7 +15,7 @@ export function useAdminFaq() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<FaqSettings>('/api/faq')) }
+    try { accept(await contentFetch<FaqSettings>('/api/faq')) }
     catch { error.value = 'Не удалось загрузить вопросы. Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -27,7 +27,6 @@ export function useAdminFaq() {
     saving.value = true
     try {
       accept(await adminFetch<FaqSettings>('/api/admin/faq', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-faq')
       if (form.mediaCleanupPending) error.value = 'Вопросы сохранены, но старые SVG не удалены из Storage. Нажмите «Сохранить» для повторной попытки.'
       else notice.value = 'Вопросы опубликованы. Изменения доступны на главной странице.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить вопросы. Повторите попытку.' }

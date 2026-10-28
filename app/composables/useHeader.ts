@@ -2,7 +2,7 @@ import type { HeaderSettings } from '#shared/types/header'
 import { defaultHeader } from '#shared/config/default-header'
 
 export function useHeader() {
-  return useFetch<HeaderSettings>('/api/header', { key: 'site-header', default: () => defaultHeader })
+  return useSiteQuery<HeaderSettings>('/api/header', { default: () => defaultHeader })
 }
 
 export function useHeaderLogo(svg: () => string) {

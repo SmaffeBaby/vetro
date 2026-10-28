@@ -4,7 +4,7 @@ import { mediaUrl } from '#shared/utils/media'
 import { sortSkillCards } from '#shared/utils/skills'
 
 export function useSkills() {
-  return useFetch<SkillsSettings>('/api/skills', { key: 'site-skills', default: () => structuredClone(defaultSkills) })
+  return useSiteQuery<SkillsSettings>('/api/skills', { default: () => structuredClone(defaultSkills) })
 }
 
 export function useSkillRows(cards: () => SkillCard[]) {

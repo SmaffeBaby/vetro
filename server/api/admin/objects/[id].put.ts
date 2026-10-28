@@ -1,5 +1,5 @@
 import { objectInputSchema,objectIdSchema } from '../../../../shared/utils/objects'
-export default defineEventHandler(async(event)=>{
+export default defineContentMutationHandler(async(event)=>{
  const {client}=await requireSiteAdmin(event)
  const parts=await readMultipartFormData(event)
  let input:unknown

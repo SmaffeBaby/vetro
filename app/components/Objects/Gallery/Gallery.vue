@@ -2,7 +2,7 @@
 import type {ObjectGallerySettings} from '#shared/types/object-gallery'
 import {mediaUrl} from '#shared/utils/media'
 const props=defineProps<{objectId:string}>()
-const {data:gallery}=await useFetch<ObjectGallerySettings>(()=>`/api/object-gallery/${encodeURIComponent(props.objectId)}`,{key:`site-object-gallery-${props.objectId}`})
+const {data:gallery}=await useSiteQuery<ObjectGallerySettings>(()=>`/api/object-gallery/${encodeURIComponent(props.objectId)}`,{})
 const carousel=useTemplateRef('carousel'),selected=ref(0),viewerOpen=ref(false),viewerIndex=ref(0)
 function select(index:number){selected.value=index}
 function choose(index:number){carousel.value?.emblaApi?.scrollTo(index);selected.value=index}

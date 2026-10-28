@@ -1,6 +1,6 @@
 import { aboutCardInputSchema } from '../../../shared/utils/about-card'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const parsed = aboutCardInputSchema.safeParse(await readBody(event))
   if (!parsed.success) throw createError({ statusCode: 400, data: { message: parsed.error.issues[0]?.message } })

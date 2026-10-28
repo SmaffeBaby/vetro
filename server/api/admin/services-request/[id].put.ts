@@ -1,6 +1,6 @@
 import { serviceRequestInputSchema } from '../../../../shared/utils/services-request'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const card = await requireServiceCard(client, getRouterParam(event, 'id'))
   const parsed = serviceRequestInputSchema.safeParse(await readBody(event))

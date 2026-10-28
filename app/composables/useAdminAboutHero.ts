@@ -4,7 +4,7 @@ import { aboutHeroImageUrl } from '#shared/utils/about-hero'
 import { aboutHeroInputSchema } from '#shared/utils/about-hero'
 
 export function useAdminAboutHero() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia('AboutHero')
   const form = reactive<AboutHeroSettings>(structuredClone(defaultAboutHero))
   const loading = ref(true)
@@ -27,7 +27,7 @@ export function useAdminAboutHero() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<AboutHeroSettings>('/api/about-hero')) }
+    try { accept(await contentFetch<AboutHeroSettings>('/api/about-hero')) }
     catch { error.value = 'Не удалось загрузить Hero. Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -42,7 +42,6 @@ export function useAdminAboutHero() {
     saving.value = true
     try {
       accept(await adminFetch<AboutHeroSettings>('/api/admin/about-hero', { method: 'PUT', body }))
-      await refreshNuxtData('site-about-hero')
       if (form.mediaCleanupPending) error.value = 'Hero сохранён, но старое фото не удалено из Storage. Нажмите «Сохранить» для повторной попытки.'
       else notice.value = 'Hero опубликован. Изменения доступны на странице /about.'
     } catch (e) {

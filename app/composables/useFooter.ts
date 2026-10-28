@@ -2,7 +2,7 @@ import type { FooterSettings } from '#shared/types/footer'
 import { defaultFooter } from '#shared/config/default-footer'
 
 export function useFooter() {
-  return useFetch<FooterSettings>('/api/footer', { key: 'site-footer', default: () => structuredClone(defaultFooter) })
+  return useSiteQuery<FooterSettings>('/api/footer', { default: () => structuredClone(defaultFooter) })
 }
 
 export function useFooterYear() {

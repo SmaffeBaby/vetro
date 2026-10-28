@@ -2,7 +2,7 @@ import type { PrivacySettings } from '#shared/types/privacy'
 import { defaultPrivacy } from '#shared/config/default-privacy'
 import { privacyInputSchema } from '#shared/utils/privacy'
 export function useAdminPrivacy() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const form = reactive<PrivacySettings>(structuredClone(defaultPrivacy))
   const loading = ref(true), saving = ref(false), loaded = ref(false)
   const error = ref(''), notice = ref(''), snapshot = ref('')
@@ -12,7 +12,7 @@ export function useAdminPrivacy() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<PrivacySettings>('/api/privacy')) }
+    try { accept(await contentFetch<PrivacySettings>('/api/privacy')) }
     catch { error.value = 'Не удалось загрузить блок «Политика конфиденциальности». Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -24,7 +24,6 @@ export function useAdminPrivacy() {
     saving.value = true
     try {
       accept(await adminFetch<PrivacySettings>('/api/admin/privacy', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-privacy')
       notice.value = 'Блок «Политика конфиденциальности» опубликован на странице /privacy.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить блок «Политика конфиденциальности». Повторите попытку.' }
     finally { saving.value = false }

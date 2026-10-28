@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AboutHistorySettings } from '#shared/types/about-history'
 import { defaultAboutHistory } from '#shared/config/default-about-history'
-const { data: content } = await useFetch<AboutHistorySettings>('/api/about-history', { key: 'site-about-history', default: () => structuredClone(defaultAboutHistory) })
+const { data: content } = await useSiteQuery<AboutHistorySettings>('/api/about-history', { default: () => structuredClone(defaultAboutHistory) })
 </script>
 
 <template>

@@ -2,7 +2,7 @@
 import type {ObjectResultsSettings} from '#shared/types/object-results'
 import {createDefaultObjectResults} from '#shared/config/default-object-results'
 const props=defineProps<{objectId:string}>()
-const {data:results}=await useFetch<ObjectResultsSettings>(`/api/object-results/${encodeURIComponent(props.objectId)}`,{key:`site-object-results-${props.objectId}`,default:()=>createDefaultObjectResults(props.objectId)})
+const {data:results}=await useSiteQuery<ObjectResultsSettings>(() => `/api/object-results/${encodeURIComponent(props.objectId)}`,{default:()=>createDefaultObjectResults(props.objectId)})
 </script>
 <template>
  <section v-if="results.cards.length" aria-labelledby="object-results-title" class="object-results border-y border-site-line py-14 text-site-ink tablet:py-24 desktop:py-36">

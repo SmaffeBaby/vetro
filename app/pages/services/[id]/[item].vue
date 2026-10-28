@@ -8,8 +8,8 @@ const route = useRoute()
 const id = String(route.params.id), itemId = String(route.params.item)
 if (!serviceIdSchema.safeParse(id).success || !serviceIdSchema.safeParse(itemId).success) throw createError({ statusCode: 404, statusMessage: 'Страница не найдена' })
 const [{ data: content, error }, { data: service, error: serviceError }] = await Promise.all([
-  useFetch<ServiceIncludedSettings>(`/api/services-included/${encodeURIComponent(id)}`, { key: `site-services-included-${id}` }),
-  useFetch<ServiceDetailPage>(`/api/services-detail/${encodeURIComponent(id)}`, { key: `site-services-detail-${id}` })
+  useSiteQuery<ServiceIncludedSettings>(`/api/services-included/${encodeURIComponent(id)}`, {}),
+  useSiteQuery<ServiceDetailPage>(`/api/services-detail/${encodeURIComponent(id)}`, {})
 ])
 if (error.value || serviceError.value) throw createError({ statusCode: error.value?.statusCode || serviceError.value?.statusCode || 503, statusMessage: 'Не удалось загрузить страницу' })
 const item = computed(() => content.value?.items.find(item => item.id === itemId))

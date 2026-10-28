@@ -1,7 +1,7 @@
 import { servicesTeamInputSchema, sortTeamCards } from '../../../shared/utils/services-team'
 import type { TeamCard } from '../../../shared/types/services-team'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
  const { client } = await requireSiteAdmin(event)
  const parts = await readMultipartFormData(event)
  let input: unknown

@@ -8,7 +8,7 @@ import { sortServiceCards } from '#shared/utils/services'
 
 export function useAdminServicesDetail(source: MaybeRefOrGetter<ServiceCard[]>) {
   const route = useRoute()
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia('Services/DetailServices/HeroSevicesDetail')
   const cards = computed(() => sortServiceCards(toValue(source)))
   const options = computed(() => cards.value.map(card => ({ label: card.title, value: card.id })))
@@ -32,7 +32,7 @@ export function useAdminServicesDetail(source: MaybeRefOrGetter<ServiceCard[]>) 
     loading.value = true; loaded.value = false; error.value = ''; notice.value = ''
     if (!id) { loading.value = false; return }
     try {
-      const value = await $fetch<ServiceDetailPage>(`/api/services-detail/${encodeURIComponent(id)}`)
+      const value = await contentFetch<ServiceDetailPage>(`/api/services-detail/${encodeURIComponent(id)}`)
       if (current === requestId) accept(value)
     } catch { if (current === requestId) error.value = 'Не удалось загрузить Hero услуги. Проверьте подключение и миграцию базы данных.' }
     finally { if (current === requestId) loading.value = false }
@@ -45,7 +45,6 @@ export function useAdminServicesDetail(source: MaybeRefOrGetter<ServiceCard[]>) 
     saving.value = true
     try {
       accept(await adminFetch<ServiceDetailSettings>(`/api/admin/services-detail/${encodeURIComponent(form.serviceId)}`, { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData(`site-services-detail-${form.serviceId}`)
       if (form.mediaCleanupPending) error.value = 'Hero сохранён, но старый SVG не удалён. Нажмите «Сохранить» для повторной попытки.'
       else notice.value = 'Hero услуги опубликован.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить Hero. Повторите попытку.' }

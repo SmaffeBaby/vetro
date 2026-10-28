@@ -1,1 +1,1 @@
-export default defineEventHandler(event => saveContactsSettings(event))
+export default defineContentMutationHandler(event => saveContactsSettings(event))

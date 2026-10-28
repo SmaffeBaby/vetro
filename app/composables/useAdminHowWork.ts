@@ -2,7 +2,7 @@ import type { HowWorkSettings } from '#shared/types/how-work'
 import { defaultHowWork } from '#shared/config/default-how-work'
 import { howWorkInputSchema, sortWorkCards } from '#shared/utils/how-work'
 export function useAdminHowWork() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const form = reactive<HowWorkSettings>(structuredClone(defaultHowWork))
   const loading = ref(true), saving = ref(false), loaded = ref(false)
   const error = ref(''), notice = ref(''), snapshot = ref('')
@@ -12,7 +12,7 @@ export function useAdminHowWork() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<HowWorkSettings>('/api/how-work')) }
+    try { accept(await contentFetch<HowWorkSettings>('/api/how-work')) }
     catch { error.value = 'Не удалось загрузить этапы работы. Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -24,7 +24,6 @@ export function useAdminHowWork() {
     saving.value = true
     try {
       accept(await adminFetch<HowWorkSettings>('/api/admin/how-work', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-how-work')
       notice.value = 'Этапы работы опубликованы. Изменения доступны на главной странице.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить этапы работы. Повторите попытку.' }
     finally { saving.value = false }

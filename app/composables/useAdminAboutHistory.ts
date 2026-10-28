@@ -2,7 +2,7 @@ import type { AboutHistorySettings } from '#shared/types/about-history'
 import { defaultAboutHistory } from '#shared/config/default-about-history'
 import { aboutHistoryInputSchema } from '#shared/utils/about-history'
 export function useAdminAboutHistory() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const form = reactive<AboutHistorySettings>(structuredClone(defaultAboutHistory))
   const loading = ref(true), saving = ref(false), loaded = ref(false)
   const error = ref(''), notice = ref(''), snapshot = ref('')
@@ -12,7 +12,7 @@ export function useAdminAboutHistory() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<AboutHistorySettings>('/api/about-history')) }
+    try { accept(await contentFetch<AboutHistorySettings>('/api/about-history')) }
     catch { error.value = 'Не удалось загрузить блок «История компании». Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -24,7 +24,6 @@ export function useAdminAboutHistory() {
     saving.value = true
     try {
       accept(await adminFetch<AboutHistorySettings>('/api/admin/about-history', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-about-history')
       notice.value = 'Блок «История компании» опубликован на странице /about.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить блок «История компании». Повторите попытку.' }
     finally { saving.value = false }

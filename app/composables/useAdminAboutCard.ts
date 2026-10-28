@@ -3,7 +3,7 @@ import { defaultAboutCard } from '#shared/config/default-about-card'
 import { aboutCardInputSchema } from '#shared/utils/about-card'
 
 export function useAdminAboutCard() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const form = reactive<AboutCardSettings>(structuredClone(defaultAboutCard))
   const loading = ref(true)
   const saving = ref(false)
@@ -20,7 +20,7 @@ export function useAdminAboutCard() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<AboutCardSettings>('/api/about-card')) }
+    try { accept(await contentFetch<AboutCardSettings>('/api/about-card')) }
     catch { error.value = 'Не удалось загрузить AboutCard. Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -32,7 +32,6 @@ export function useAdminAboutCard() {
     saving.value = true
     try {
       accept(await adminFetch<AboutCardSettings>('/api/admin/about-card', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-about-card')
       notice.value = 'AboutCard опубликован. Изменения доступны на главной странице.'
     } catch (e) {
       error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить AboutCard. Повторите попытку.'

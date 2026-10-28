@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PrivacySettings } from '#shared/types/privacy'
 import { defaultPrivacy } from '#shared/config/default-privacy'
-const { data: content } = await useFetch<PrivacySettings>('/api/privacy', { key: 'site-privacy', default: () => structuredClone(defaultPrivacy) })
+const { data: content } = await useSiteQuery<PrivacySettings>('/api/privacy', { default: () => structuredClone(defaultPrivacy) })
 useHead({ title: () => `${content.value.title} · Ветро` })
 </script>
 

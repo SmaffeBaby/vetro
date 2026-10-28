@@ -1,7 +1,7 @@
 import { whyInputSchema } from '../../../shared/utils/why'
 import type { WhyCard } from '../../../shared/types/why'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const parsed = whyInputSchema.safeParse(await readBody(event))
   if (!parsed.success) throw createError({ statusCode: 400, data: { message: parsed.error.issues[0]?.message } })

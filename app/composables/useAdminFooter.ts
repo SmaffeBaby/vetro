@@ -3,7 +3,7 @@ import { defaultFooter } from '#shared/config/default-footer'
 import { footerInputSchema, sortFooterColumns } from '#shared/utils/footer'
 
 export function useAdminFooter() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia('Footer')
   const form = reactive<FooterSettings>(structuredClone(defaultFooter))
   const loading = ref(true), saving = ref(false), loaded = ref(false)
@@ -15,7 +15,7 @@ export function useAdminFooter() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<FooterSettings>('/api/footer')) }
+    try { accept(await contentFetch<FooterSettings>('/api/footer')) }
     catch { error.value = 'Не удалось загрузить Footer. Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -27,7 +27,6 @@ export function useAdminFooter() {
     saving.value = true
     try {
       accept(await adminFetch<FooterSettings>('/api/admin/footer', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-footer')
       if (form.mediaCleanupPending) error.value = 'Footer сохранён, но старый логотип не удалён из Storage. Нажмите «Сохранить» для повторной попытки.'
       else notice.value = 'Footer опубликован. Изменения доступны на сайте.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить Footer. Повторите попытку.' }

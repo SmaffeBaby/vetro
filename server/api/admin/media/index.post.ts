@@ -1,6 +1,6 @@
 import { mediaUrl } from '../../../../shared/utils/media'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const parts = await readMultipartFormData(event)
   const component = parts?.find(part => part.name === 'component')?.data.toString('utf8') ?? ''

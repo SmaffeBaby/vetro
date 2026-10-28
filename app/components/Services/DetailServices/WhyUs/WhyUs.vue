@@ -2,7 +2,7 @@
 import type { ServicesWhyUsSettings } from '#shared/types/services-why-us'
 import { defaultServicesWhyUs } from '#shared/config/default-services-why-us'
 withDefaults(defineProps<{ variant?: 'benefits' | 'metrics' }>(), { variant: 'benefits' })
-const { data: content } = await useFetch<ServicesWhyUsSettings>('/api/services-why-us', { key: 'site-services-why-us', default: () => structuredClone(defaultServicesWhyUs) })
+const { data: content } = await useSiteQuery<ServicesWhyUsSettings>('/api/services-why-us', { default: () => structuredClone(defaultServicesWhyUs) })
 </script>
 
 <template>

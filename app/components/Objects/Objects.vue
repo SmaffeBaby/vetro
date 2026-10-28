@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ObjectsCatalog } from '#shared/types/objects'
-const {data:catalog,error}=await useFetch<ObjectsCatalog>('/api/objects',{key:'site-objects'})
+const {data:catalog,error}=await useSiteQuery<ObjectsCatalog>('/api/objects',{})
 const category=ref('all')
 const pageSize = 7
 const results = ref<HTMLElement | null>(null)

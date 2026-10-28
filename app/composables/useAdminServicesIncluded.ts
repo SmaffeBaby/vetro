@@ -5,7 +5,7 @@ import { serviceIncludedInputSchema } from '#shared/utils/services-included'
 export function useAdminServicesIncluded() {
   const route = useRoute()
   const { data: services } = useServices()
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const options = computed(() => services.value.cards.map(card => ({ label: card.title, value: card.id })))
   const selectedId = computed(() => options.value.find(option => option.value === route.query.service)?.value || options.value[0]?.value || '')
   const form = reactive<ServiceIncludedSettings>(createDefaultServicesIncluded(''))
@@ -24,7 +24,7 @@ export function useAdminServicesIncluded() {
     if (!id) return
     loading.value = true
     try {
-      const value = await $fetch<ServiceIncludedSettings>(`/api/services-included/${encodeURIComponent(id)}`)
+      const value = await contentFetch<ServiceIncludedSettings>(`/api/services-included/${encodeURIComponent(id)}`)
       if (current === requestId) accept(value)
     } catch { if (current === requestId) error.value = 'Не удалось загрузить пункты услуги. Попробуйте ещё раз.' }
     finally { if (current === requestId) loading.value = false }
@@ -37,7 +37,6 @@ export function useAdminServicesIncluded() {
     saving.value = true
     try {
       accept(await adminFetch<ServiceIncludedSettings>(`/api/admin/services-included/${encodeURIComponent(form.serviceId)}`, { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData(`site-services-included-${form.serviceId}`)
       notice.value = 'Пункты услуги и их страницы опубликованы.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить изменения.' }
     finally { saving.value = false }

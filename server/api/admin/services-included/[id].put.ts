@@ -1,6 +1,6 @@
 import { serviceIncludedInputSchema } from '../../../../shared/utils/services-included'
 
-export default defineEventHandler(async event => {
+export default defineContentMutationHandler(async event => {
   const { client } = await requireSiteAdmin(event)
   const service = await requireServiceCard(client, getRouterParam(event, 'id'))
   const parsed = serviceIncludedInputSchema.safeParse(await readBody(event))

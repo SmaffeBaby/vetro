@@ -5,7 +5,7 @@ definePageMeta({ key: route => route.path })
 const route = useRoute()
 const id = String(route.params.id)
 if (!serviceIdSchema.safeParse(id).success) throw createError({ statusCode: 404, statusMessage: 'Услуга не найдена' })
-const { data: detail, error } = await useFetch<ServiceDetailPage>(`/api/services-detail/${encodeURIComponent(id)}`, { key: `site-services-detail-${id}` })
+const { data: detail, error } = await useSiteQuery<ServiceDetailPage>(`/api/services-detail/${encodeURIComponent(id)}`, {})
 if (error.value || !detail.value) throw createError({ statusCode: error.value?.statusCode || 503, statusMessage: error.value?.statusCode === 404 ? 'Услуга не найдена' : 'Не удалось загрузить услугу' })
 useHead({ title: () => `${detail.value?.title} · Ветро`, meta: [{ name: 'description', content: () => detail.value?.text || '' }] })
 </script>

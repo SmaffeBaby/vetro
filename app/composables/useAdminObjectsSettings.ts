@@ -25,7 +25,6 @@ export function useAdminObjectsSettings() {
     saving.value = true
     try {
       accept(await adminFetch<ObjectsSettings>('/api/admin/objects/settings', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-objects')
       notice.value = 'Каталог объектов опубликован.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить каталог объектов. Повторите попытку.' }
     finally { saving.value = false }

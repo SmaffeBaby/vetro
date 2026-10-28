@@ -3,8 +3,8 @@ import type {ObjectsCatalog} from '#shared/types/objects'
 import type {OtherObjectsSettings} from '#shared/types/other-objects'
 import {defaultOtherObjects} from '#shared/config/default-other-objects'
 const props=defineProps<{currentObjectId:string}>()
-const {data:settings}=await useFetch<OtherObjectsSettings>('/api/other-objects',{key:'site-other-objects',default:()=>structuredClone(defaultOtherObjects)})
-const {data:catalog}=await useFetch<ObjectsCatalog>('/api/objects',{key:'site-objects'})
+const {data:settings}=await useSiteQuery<OtherObjectsSettings>('/api/other-objects',{default:()=>structuredClone(defaultOtherObjects)})
+const {data:catalog}=await useSiteQuery<ObjectsCatalog>('/api/objects',{})
 const cards=computed(()=>{
  const available=catalog.value?.objects.filter(o=>o.id!==props.currentObjectId)||[]
  return (settings.value.objectIds.length?settings.value.objectIds.flatMap(id=>available.filter(o=>o.id===id)):available).slice(0,3)

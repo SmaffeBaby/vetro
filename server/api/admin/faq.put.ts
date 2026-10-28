@@ -1,7 +1,7 @@
 import { faqInputSchema } from '../../../shared/utils/faq'
 import type { FaqBenefit } from '../../../shared/types/faq'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const parsed = faqInputSchema.safeParse(await readBody(event))
   if (!parsed.success) throw createError({ statusCode: 400, data: { message: parsed.error.issues[0]?.message } })

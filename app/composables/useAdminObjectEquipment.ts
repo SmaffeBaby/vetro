@@ -34,7 +34,7 @@ export function useAdminObjectEquipment(){
   const parsed=objectEquipmentInputSchema.safeParse(form)
   if(!parsed.success){error.value=parsed.error.issues[0]?.message||'Проверьте таблицу';return}
   saving.value=true
-  try{accept(await adminFetch<ObjectEquipmentSettings>(`/api/admin/object-equipment/${encodeURIComponent(form.objectId)}`,{method:'PUT',body:parsed.data}));await refreshNuxtData(`site-object-equipment-${form.objectId}`);notice.value='Оборудование выбранного объекта сохранено.'}
+  try{accept(await adminFetch<ObjectEquipmentSettings>(`/api/admin/object-equipment/${encodeURIComponent(form.objectId)}`,{method:'PUT',body:parsed.data}));notice.value='Оборудование выбранного объекта сохранено.'}
   catch(e){error.value=(e as {data?:{data?:{message?:string}}}).data?.data?.message||'Не удалось сохранить оборудование. Повторите попытку.'}
   finally{saving.value=false}
  }

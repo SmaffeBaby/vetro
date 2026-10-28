@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ObjectsCatalog } from '#shared/types/objects'
 
-const { data: catalog } = await useFetch<ObjectsCatalog>('/api/objects', { key: 'site-objects' })
+const { data: catalog } = await useSiteQuery<ObjectsCatalog>('/api/objects', {})
 const objects = computed(() => catalog.value?.objects.slice(0, 3) || [])
 </script>
 
