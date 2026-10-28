@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
     await $fetch(`${config.supabaseUrl}/rest/v1/`, {
       headers: { apikey: config.supabaseServiceRoleKey }, timeout: 5000
     })
-    return { ok: true, service: 'vetro', database: 'reachable' }
+    return { ok: true, service: 'vetro', database: 'reachable', revision: process.env.APP_REVISION || 'manual' }
   } catch {
     setResponseStatus(event, 503)
     return { ok: false, service: 'vetro', database: 'unavailable' }

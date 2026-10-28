@@ -1,0 +1,69 @@
+name: CI and production deploy
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vetro-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  build:
+    name: Build and typecheck
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    environment: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'production' || 'ci' }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Build application
+        run: docker build --target build --tag vetro-check:${{ github.sha }} .
+      - name: Check TypeScript
+        run: docker run --rm vetro-check:${{ github.sha }} npm run typecheck
+      - name: Build production image
+        run: >-
+          docker build --tag vetro-app:${{ github.sha }}
+          --label org.opencontainers.image.revision=${{ github.sha }} .
+      - name: Prepare release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p "$RUNNER_TEMP/release"
+          git archive HEAD > "$RUNNER_TEMP/release/source.tar"
+          docker save vetro-app:${{ github.sha }} | gzip -1 > "$RUNNER_TEMP/release/app-image.tar.gz"
+          tar -cf "$RUNNER_TEMP/release.tar" -C "$RUNNER_TEMP/release" source.tar app-image.tar.gz
+      - name: Deploy production
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          umask 077
+          mkdir -p "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_SSH_KEY" > "$HOME/.ssh/vetro_deploy"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          ssh -T -i "$HOME/.ssh/vetro_deploy" \
+            -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            -o ServerAliveInterval=15 -o ServerAliveCountMax=8 \
+            root@45.12.114.96 "deploy $GITHUB_SHA" < "$RUNNER_TEMP/release.tar"
+      - name: Check public deployment
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          EXPECTED_REVISION: ${{ github.sha }}
+        run: |
+          curl --fail --silent --show-error --retry 5 --retry-delay 5 \
+            http://45.12.114.96/api/health > "$RUNNER_TEMP/health.json"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          health = json.loads((Path(os.environ['RUNNER_TEMP']) / 'health.json').read_text())
+          assert health['ok'] and health['database'] == 'reachable', health
+          assert health['revision'] == os.environ['EXPECTED_REVISION'], health
+          print('Production is healthy at revision', health['revision'])
+          PY
