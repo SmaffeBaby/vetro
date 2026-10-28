@@ -3,7 +3,7 @@ import { defaultSkills } from '#shared/config/default-skills'
 import { skillsInputSchema, sortSkillCards } from '#shared/utils/skills'
 
 export function useAdminSkills() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia('Skills')
   const form = reactive<SkillsSettings>(structuredClone(defaultSkills))
   const loading = ref(true)
@@ -22,7 +22,7 @@ export function useAdminSkills() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<SkillsSettings>('/api/skills')) }
+    try { accept(await contentFetch<SkillsSettings>('/api/skills')) }
     catch { error.value = 'Не удалось загрузить компетенции. Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -34,7 +34,6 @@ export function useAdminSkills() {
     saving.value = true
     try {
       accept(await adminFetch<SkillsSettings>('/api/admin/skills', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-skills')
       if (form.mediaCleanupPending) error.value = 'Компетенции сохранены, но старые SVG не удалены из Storage. Нажмите «Сохранить» для повторной попытки.'
       else notice.value = 'Компетенции опубликованы. Изменения доступны на главной странице.'
     } catch (e) {

@@ -1,5 +1,5 @@
 import {objectResultsInputSchema} from '../../../../shared/utils/object-results'
-export default defineEventHandler(async(event)=>{
+export default defineContentMutationHandler(async(event)=>{
  const {client}=await requireSiteAdmin(event)
  const id=await requireObjectRecord(client,getRouterParam(event,'id'))
  const parsed=objectResultsInputSchema.safeParse(await readBody(event))

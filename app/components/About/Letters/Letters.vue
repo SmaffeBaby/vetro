@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AboutLettersSettings } from '#shared/types/about-letters'
 import { defaultAboutLetters } from '#shared/config/default-about-letters'
-const { data: content } = await useFetch<AboutLettersSettings>('/api/about-letters', { key: 'site-about-letters', default: () => structuredClone(defaultAboutLetters) })
+const { data: content } = await useSiteQuery<AboutLettersSettings>('/api/about-letters', { default: () => structuredClone(defaultAboutLetters) })
 </script>
 
 <template>

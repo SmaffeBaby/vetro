@@ -14,7 +14,7 @@ export function useAdminServicesHelpCard(kind: 'services' | 'objects' | 'objects
   } as const
   const { api, label, mediaComponent, defaults, description } = configs[kind]
   const editorTitle = label, mediaDirectory = mediaComponent.replaceAll('/', ' / ')
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia(mediaComponent)
   const form = reactive<ServicesHelpCardSettings>(structuredClone(defaults))
   const loading = ref(true)
@@ -36,7 +36,7 @@ export function useAdminServicesHelpCard(kind: 'services' | 'objects' | 'objects
     if (saving.value) return
     loading.value = true
     error.value = ''
-    try { accept(await $fetch<ServicesHelpCardSettings>(`/api/${api}`)) } catch { error.value = `Не удалось загрузить ${label}.` }
+    try { accept(await contentFetch<ServicesHelpCardSettings>(`/api/${api}`)) } catch { error.value = `Не удалось загрузить ${label}.` }
     finally { loading.value = false }
   }
   async function save() {
@@ -47,7 +47,6 @@ export function useAdminServicesHelpCard(kind: 'services' | 'objects' | 'objects
     saving.value = true
     try {
       accept(await adminFetch<ServicesHelpCardSettings>(`/api/admin/${api}`, { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData(`site-${api}`)
       if (form.mediaCleanupPending) error.value = `${label}: настройки сохранены, но старый файл не удалён. Сохраните ещё раз для повторной попытки.`
       else notice.value = `${label}: изменения опубликованы.`
     } catch (e) { error.value = message(e) }

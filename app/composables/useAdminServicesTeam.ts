@@ -4,7 +4,7 @@ import type { ServicesTeamSettings } from '#shared/types/services-team'
 import { defaultServicesTeam } from '#shared/config/default-services-team'
 import { servicesTeamInputSchema, sortTeamCards } from '#shared/utils/services-team'
 export function useAdminServicesTeam() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia('Services/DetailServices/Team')
   const files = shallowReactive<Record<string, File>>({})
   const previews = reactive<Record<string, string>>({})
@@ -18,7 +18,7 @@ export function useAdminServicesTeam() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<ServicesTeamSettings>('/api/services-team')) }
+    try { accept(await contentFetch<ServicesTeamSettings>('/api/services-team')) }
     catch { error.value = 'Не удалось загрузить команду. Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -33,7 +33,6 @@ export function useAdminServicesTeam() {
     saving.value = true
     try {
       accept(await adminFetch<ServicesTeamSettings>('/api/admin/services-team', { method: 'PUT', body }))
-      await refreshNuxtData('site-services-team')
       if (form.mediaCleanupPending) error.value = 'Команда сохранена. Старые фото не удалены; сохраните ещё раз для повторной попытки.'
       else notice.value = 'Команда опубликована для всех детальных страниц услуг.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить команду. Повторите попытку.' }

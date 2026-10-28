@@ -1,7 +1,7 @@
 import { servicesInputSchema, sortServiceCards } from '../../../shared/utils/services'
 import type { ServiceCard } from '../../../shared/types/services'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const parsed = servicesInputSchema.safeParse(await readBody(event))
   if (!parsed.success) throw createError({ statusCode: 400, data: { message: parsed.error.issues[0]?.message } })

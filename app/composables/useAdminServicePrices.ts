@@ -9,7 +9,7 @@ import { sortServiceCards } from '#shared/utils/services'
 
 export function useAdminServicePrices(source: MaybeRefOrGetter<ServiceCard[]>) {
   const route = useRoute()
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const cards = computed(() => sortServiceCards(toValue(source)))
   const options = computed(() => cards.value.map(card => ({ label: card.title, value: card.id })))
   const selectedId = computed(() => cards.value.find(card => card.id === route.query.service)?.id || cards.value[0]?.id || '')
@@ -31,7 +31,7 @@ export function useAdminServicePrices(source: MaybeRefOrGetter<ServiceCard[]>) {
     loading.value = true; loaded.value = false; error.value = ''; notice.value = ''
     if (!id) { loading.value = false; return }
     try {
-      const value = await $fetch<ServicePriceSettings>(`/api/services-prices/${encodeURIComponent(id)}`)
+      const value = await contentFetch<ServicePriceSettings>(`/api/services-prices/${encodeURIComponent(id)}`)
       if (current === requestId) accept(value)
     } catch { if (current === requestId) error.value = 'Не удалось загрузить прайс-лист услуги. Проверьте подключение и миграцию базы данных.' }
     finally { if (current === requestId) loading.value = false }
@@ -44,7 +44,6 @@ export function useAdminServicePrices(source: MaybeRefOrGetter<ServiceCard[]>) {
     saving.value = true
     try {
       accept(await adminFetch<ServicePriceSettings>(`/api/admin/services-prices/${encodeURIComponent(form.serviceId)}`, { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData(`site-services-prices-${form.serviceId}`)
       notice.value = 'Стоимость услуг опубликована.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить прайс-лист. Повторите попытку.' }
     finally { saving.value = false }

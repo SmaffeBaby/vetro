@@ -3,7 +3,7 @@ import type { ServicesTeamSettings } from '#shared/types/services-team'
 import { defaultServicesTeam } from '#shared/config/default-services-team'
 import { sortTeamCards } from '#shared/utils/services-team'
 withDefaults(defineProps<{ embedded?: boolean; title?: string; description?: string; regionId?: string }>(), { embedded: false, regionId: 'services-team-title' })
-const { data: team } = await useFetch<ServicesTeamSettings>('/api/services-team', { key: 'site-services-team', default: () => structuredClone(defaultServicesTeam) })
+const { data: team } = await useSiteQuery<ServicesTeamSettings>('/api/services-team', { default: () => structuredClone(defaultServicesTeam) })
 const cards = computed(() => sortTeamCards(team.value.cards))
 </script>
 <template>

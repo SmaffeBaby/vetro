@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ServicesHelpCardSettings } from '#shared/types/services-help-card'
 import { defaultAboutProject } from '#shared/config/default-about-project'
-const { data: content } = await useFetch<ServicesHelpCardSettings>('/api/about-project', { key: 'site-about-project', default: () => structuredClone(defaultAboutProject) })
+const { data: content } = await useSiteQuery<ServicesHelpCardSettings>('/api/about-project', { default: () => structuredClone(defaultAboutProject) })
 </script>
 
 <template>

@@ -2,7 +2,7 @@
 import type {SiteObject,ObjectsCatalog} from '#shared/types/objects'
 import {mediaUrl} from '#shared/utils/media'
 const props=defineProps<{object:SiteObject}>()
-const {data:catalog}=await useFetch<ObjectsCatalog>('/api/objects',{key:'site-objects'})
+const {data:catalog}=await useSiteQuery<ObjectsCatalog>('/api/objects',{})
 const {data:services}=await useServices()
 const category=computed(()=>catalog.value?.settings.categories.find(c=>c.id===props.object.categoryId)?.label||'')
 const activeServices=computed(()=>services.value.cards.filter(c=>props.object.serviceIds.includes(c.id)))

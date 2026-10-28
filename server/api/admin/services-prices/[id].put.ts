@@ -1,5 +1,5 @@
 import { servicePricesInputSchema } from '../../../../shared/utils/services-prices'
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const card = await requireServiceCard(client, getRouterParam(event, 'id'))
   const parsed = servicePricesInputSchema.safeParse(await readBody(event))

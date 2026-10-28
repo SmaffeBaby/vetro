@@ -3,7 +3,7 @@ import type { ServicePriceSettings } from '#shared/types/services-prices'
 import { createDefaultServicePrices } from '#shared/config/default-services-prices'
 const props = defineProps<{ currentServiceId: string }>()
 const emit = defineEmits<{ request: [] }>()
-const { data: prices } = await useFetch<ServicePriceSettings>(`/api/services-prices/${encodeURIComponent(props.currentServiceId)}`, { key: `site-services-prices-${props.currentServiceId}`, default: () => createDefaultServicePrices(props.currentServiceId) })
+const { data: prices } = await useSiteQuery<ServicePriceSettings>(() => `/api/services-prices/${encodeURIComponent(props.currentServiceId)}`, { default: () => createDefaultServicePrices(props.currentServiceId) })
 </script>
 
 <template>

@@ -2,7 +2,7 @@
 import type { ObjectsCatalog } from '#shared/types/objects'
 
 const props = defineProps<{ currentServiceId: string }>()
-const { data: catalog } = await useFetch<ObjectsCatalog>('/api/objects', { key: 'site-objects' })
+const { data: catalog } = await useSiteQuery<ObjectsCatalog>('/api/objects', {})
 const objects = computed(() => catalog.value?.objects.filter(object => object.serviceIds.includes(props.currentServiceId)) || [])
 </script>
 

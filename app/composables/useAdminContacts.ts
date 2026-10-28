@@ -4,7 +4,7 @@ import { contactsInputSchema } from '#shared/utils/contacts'
 
 export function useAdminContacts(kind: 'home' | 'page' = 'home') {
   const endpoint = kind === 'page' ? 'contacts-page' : 'contacts'
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia(kind === 'page' ? 'ContactsPage' : 'Contacts')
   const form = reactive<ContactsSettings>(structuredClone(defaultContacts))
   const loading = ref(true), saving = ref(false), loaded = ref(false)
@@ -16,7 +16,7 @@ export function useAdminContacts(kind: 'home' | 'page' = 'home') {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<ContactsSettings>(`/api/${endpoint}`)) }
+    try { accept(await contentFetch<ContactsSettings>(`/api/${endpoint}`)) }
     catch { error.value = 'Не удалось загрузить контакты. Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -28,7 +28,6 @@ export function useAdminContacts(kind: 'home' | 'page' = 'home') {
     saving.value = true
     try {
       accept(await adminFetch<ContactsSettings>(`/api/admin/${endpoint}`, { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData(`site-${endpoint}`)
       if (form.mediaCleanupPending) error.value = 'Контакты сохранены, но старые SVG не удалены из Storage. Нажмите «Сохранить» для повторной попытки.'
       else notice.value = kind === 'page' ? 'Контакты опубликованы на странице /contacts.' : 'Контакты опубликованы на главной странице.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить контакты. Повторите попытку.' }

@@ -2,7 +2,7 @@ import type { AboutLettersSettings } from '#shared/types/about-letters'
 import { defaultAboutLetters } from '#shared/config/default-about-letters'
 import { aboutLettersInputSchema } from '#shared/utils/about-letters'
 export function useAdminAboutLetters() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const form = reactive<AboutLettersSettings>(structuredClone(defaultAboutLetters))
   const loading = ref(true), saving = ref(false), loaded = ref(false)
   const error = ref(''), notice = ref(''), snapshot = ref('')
@@ -12,7 +12,7 @@ export function useAdminAboutLetters() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<AboutLettersSettings>('/api/about-letters')) }
+    try { accept(await contentFetch<AboutLettersSettings>('/api/about-letters')) }
     catch { error.value = 'Не удалось загрузить блок «Благодарственные письма». Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -24,7 +24,6 @@ export function useAdminAboutLetters() {
     saving.value = true
     try {
       accept(await adminFetch<AboutLettersSettings>('/api/admin/about-letters', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-about-letters')
       notice.value = 'Блок «Благодарственные письма» опубликован на странице /about.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить блок «Благодарственные письма». Повторите попытку.' }
     finally { saving.value = false }

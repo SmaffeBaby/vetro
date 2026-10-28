@@ -3,7 +3,7 @@ import { defaultHeader } from '#shared/config/default-header'
 import { headerInputSchema } from '#shared/utils/header'
 
 export function useAdminHeader() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia('Header')
   const form = reactive<HeaderSettings>(structuredClone(defaultHeader))
   const loading = ref(true)
@@ -24,7 +24,7 @@ export function useAdminHeader() {
   async function load() {
     loading.value = true
     error.value = ''
-    try { accept(await $fetch<HeaderSettings>('/api/header')) } catch { error.value = 'Не удалось загрузить настройки хедера.' }
+    try { accept(await contentFetch<HeaderSettings>('/api/header')) } catch { error.value = 'Не удалось загрузить настройки хедера.' }
     finally { loading.value = false }
   }
   async function save() {
@@ -35,7 +35,6 @@ export function useAdminHeader() {
     saving.value = true
     try {
       accept(await adminFetch<HeaderSettings>('/api/admin/header', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-header')
       if (form.mediaCleanupPending) error.value = 'Хедер сохранён, но Storage не удалил старый файл. Нажмите «Сохранить» для повторной попытки.'
       else notice.value = 'Хедер опубликован. Изменения уже доступны на сайте.'
     } catch (e) { error.value = message(e) }

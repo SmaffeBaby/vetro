@@ -1,6 +1,6 @@
 import {objectGalleryInputSchema,GALLERY_IMAGE_TYPES,GALLERY_UPLOAD_MAX_BYTES} from '../../../../shared/utils/object-gallery'
 import type {ObjectPhoto} from '../../../../shared/types/object-gallery'
-export default defineEventHandler(async(event)=>{
+export default defineContentMutationHandler(async(event)=>{
  const {client}=await requireSiteAdmin(event),id=await requireObjectRecord(client,getRouterParam(event,'id'))
  const parts=await readMultipartFormData(event)
  let input:unknown

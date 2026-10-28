@@ -1,1 +1,1 @@
-export default defineEventHandler(async(event)=>{const client=serverSupabase(event),id=await requireObjectRecord(client,getRouterParam(event,'id'),true);setHeader(event,'Cache-Control','no-cache');return readObjectGallery(client,id)})
+export default definePublicContentHandler(async(event)=>{const client=serverSupabase(event),id=await requireObjectRecord(client,getRouterParam(event,'id'),true);return readObjectGallery(client,id)})

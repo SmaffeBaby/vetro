@@ -1,6 +1,6 @@
 import { headerInputSchema } from '../../../shared/utils/header'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const parsed = headerInputSchema.safeParse(await readBody(event))
   if (!parsed.success) {

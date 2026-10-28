@@ -2,7 +2,7 @@ import type { WhyCard, WhySettings } from '#shared/types/why'
 import { defaultWhy } from '#shared/config/default-why'
 import { sortWhyCards, whyInputSchema } from '#shared/utils/why'
 export function useAdminWhy() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia('Why')
   const form = reactive<WhySettings>(structuredClone(defaultWhy))
   const loading = ref(true), saving = ref(false), loaded = ref(false)
@@ -15,7 +15,7 @@ export function useAdminWhy() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<WhySettings>('/api/why')) }
+    try { accept(await contentFetch<WhySettings>('/api/why')) }
     catch { error.value = 'Не удалось загрузить карточки. Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -27,7 +27,6 @@ export function useAdminWhy() {
     saving.value = true
     try {
       accept(await adminFetch<WhySettings>('/api/admin/why', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-why')
       if (form.mediaCleanupPending) error.value = 'Карточки сохранены, но старые SVG не удалены из Storage. Нажмите «Сохранить» для повторной попытки.'
       else notice.value = 'Карточки опубликованы. Изменения доступны на главной странице.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить карточки. Повторите попытку.' }

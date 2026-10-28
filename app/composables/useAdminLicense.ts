@@ -3,7 +3,7 @@ import { defaultLicense } from '#shared/config/default-license'
 import { licenseInputSchema, licenseImageTypes } from '#shared/utils/license'
 
 export function useAdminLicense() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia('License')
   const form = reactive<LicenseSettings>(structuredClone(defaultLicense))
   const loading = ref(true)
@@ -26,7 +26,7 @@ export function useAdminLicense() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<LicenseSettings>('/api/license')) }
+    try { accept(await contentFetch<LicenseSettings>('/api/license')) }
     catch { error.value = 'Не удалось загрузить лицензию. Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -41,7 +41,6 @@ export function useAdminLicense() {
     saving.value = true
     try {
       accept(await adminFetch<LicenseSettings>('/api/admin/license', { method: 'PUT', body }))
-      await refreshNuxtData('site-license')
       if (form.mediaCleanupPending) error.value = 'Лицензия сохранена, но старое фото не удалено из Storage. Нажмите «Сохранить» для повторной попытки.'
       else notice.value = 'Лицензия опубликована. Изменения доступны на главной странице.'
     } catch (e) {

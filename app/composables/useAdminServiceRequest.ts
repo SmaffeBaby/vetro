@@ -9,7 +9,7 @@ import { sortServiceCards } from '#shared/utils/services'
 
 export function useAdminServiceRequest(source: MaybeRefOrGetter<ServiceCard[]>) {
   const route = useRoute()
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia('Services/DetailServices/RequestCard')
   const cards = computed(() => sortServiceCards(toValue(source)))
   const options = computed(() => cards.value.map(card => ({ label: card.title, value: card.id })))
@@ -33,7 +33,7 @@ export function useAdminServiceRequest(source: MaybeRefOrGetter<ServiceCard[]>) 
     loading.value = true; loaded.value = false; error.value = ''; notice.value = ''
     if (!id) { loading.value = false; return }
     try {
-      const value = await $fetch<ServiceRequestSettings>(`/api/services-request/${encodeURIComponent(id)}`)
+      const value = await contentFetch<ServiceRequestSettings>(`/api/services-request/${encodeURIComponent(id)}`)
       if (current === requestId) accept(value)
     } catch { if (current === requestId) error.value = 'Не удалось загрузить блок заявки услуги. Проверьте подключение и миграцию базы данных.' }
     finally { if (current === requestId) loading.value = false }
@@ -46,7 +46,6 @@ export function useAdminServiceRequest(source: MaybeRefOrGetter<ServiceCard[]>) 
     saving.value = true
     try {
       accept(await adminFetch<ServiceRequestSettings>(`/api/admin/services-request/${encodeURIComponent(form.serviceId)}`, { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData(`site-services-request-${form.serviceId}`)
       if (form.mediaCleanupPending) error.value = 'Блок заявки сохранён, но старый SVG не удалён. Нажмите «Сохранить» для повторной попытки.'
       else notice.value = 'блок заявки услуги опубликован.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить блок заявки. Повторите попытку.' }

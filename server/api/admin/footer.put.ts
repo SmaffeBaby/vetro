@@ -1,6 +1,6 @@
 import { footerInputSchema, sortFooterColumns } from '../../../shared/utils/footer'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const parsed = footerInputSchema.safeParse(await readBody(event))
   if (!parsed.success) {

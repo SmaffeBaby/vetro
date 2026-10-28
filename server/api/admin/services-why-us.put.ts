@@ -1,5 +1,5 @@
 import { servicesWhyUsInputSchema } from '../../../shared/utils/services-why-us'
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const parsed = servicesWhyUsInputSchema.safeParse(await readBody(event))
   if (!parsed.success) throw createError({ statusCode: 400, data: { message: parsed.error.issues[0]?.message } })

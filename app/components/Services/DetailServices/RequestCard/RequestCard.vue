@@ -3,7 +3,7 @@ import type { ServiceRequestSettings } from '#shared/types/services-request'
 import { createDefaultServiceRequest } from '#shared/config/default-services-request'
 const props = defineProps<{ currentServiceId: string }>()
 const emit = defineEmits<{ request: [] }>()
-const { data: request } = await useFetch<ServiceRequestSettings>(`/api/services-request/${encodeURIComponent(props.currentServiceId)}`, { key: `site-services-request-${props.currentServiceId}`, default: () => createDefaultServiceRequest(props.currentServiceId) })
+const { data: request } = await useSiteQuery<ServiceRequestSettings>(() => `/api/services-request/${encodeURIComponent(props.currentServiceId)}`, { default: () => createDefaultServiceRequest(props.currentServiceId) })
 </script>
 
 <template>

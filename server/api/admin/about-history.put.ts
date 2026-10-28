@@ -1,5 +1,5 @@
 import { aboutHistoryInputSchema } from '../../../shared/utils/about-history'
-export default defineEventHandler(async event => {
+export default defineContentMutationHandler(async event => {
   const { client } = await requireSiteAdmin(event)
   const parsed = aboutHistoryInputSchema.safeParse(await readBody(event))
   if (!parsed.success) throw createError({ statusCode: 400, data: { message: parsed.error.issues[0]?.message } })

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AboutHeroSettings } from '#shared/types/about-hero'
 import { defaultAboutHero } from '#shared/config/default-about-hero'
-const { data: content } = await useFetch<AboutHeroSettings>('/api/about-hero', { key: 'site-about-hero', default: () => structuredClone(defaultAboutHero) })
+const { data: content } = await useSiteQuery<AboutHeroSettings>('/api/about-hero', { default: () => structuredClone(defaultAboutHero) })
 useHead({ title: () => `${content.value.title} · Ветро`, meta: [{ name: 'description', content: () => content.value.text }] })
 </script>
 

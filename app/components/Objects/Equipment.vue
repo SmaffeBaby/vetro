@@ -2,7 +2,7 @@
 import type {ObjectEquipmentSettings} from '#shared/types/object-equipment'
 import {createDefaultObjectEquipment} from '#shared/config/default-object-equipment'
 const props=defineProps<{objectId:string}>()
-const {data:equipment}=await useFetch<ObjectEquipmentSettings>(`/api/object-equipment/${encodeURIComponent(props.objectId)}`,{key:`site-object-equipment-${props.objectId}`,default:()=>createDefaultObjectEquipment(props.objectId)})
+const {data:equipment}=await useSiteQuery<ObjectEquipmentSettings>(() => `/api/object-equipment/${encodeURIComponent(props.objectId)}`,{default:()=>createDefaultObjectEquipment(props.objectId)})
 </script>
 <template>
  <section v-if="equipment.enabled" aria-labelledby="object-equipment-title" class="object-equipment bg-site-surface py-14 text-site-ink tablet:py-24">

@@ -1,6 +1,6 @@
 import { isMediaComponent, isMediaPath, mediaDirectory } from '../../../../shared/utils/media'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const { component, path } = await readBody(event)
   if (typeof component !== 'string' || !isMediaComponent(component) || typeof path !== 'string' || !isMediaPath(path) || !(path.startsWith(`${mediaDirectory(component)}/`) || path.startsWith(`${component}/`))) {

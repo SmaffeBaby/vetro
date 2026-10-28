@@ -3,7 +3,7 @@ import type { ServiceIncludedSettings } from '#shared/types/services-included'
 import { serviceIncludedHref } from '#shared/utils/services-included'
 
 const props = defineProps<{ currentServiceId: string }>()
-const { data: content } = await useFetch<ServiceIncludedSettings>(() => `/api/services-included/${encodeURIComponent(props.currentServiceId)}`, { key: `site-services-included-${props.currentServiceId}` })
+const { data: content } = await useSiteQuery<ServiceIncludedSettings>(() => `/api/services-included/${encodeURIComponent(props.currentServiceId)}`, {})
 </script>
 
 <template>

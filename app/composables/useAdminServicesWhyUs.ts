@@ -2,7 +2,7 @@ import type { ServicesWhyUsSettings } from '#shared/types/services-why-us'
 import { defaultServicesWhyUs } from '#shared/config/default-services-why-us'
 import { servicesWhyUsInputSchema } from '#shared/utils/services-why-us'
 export function useAdminServicesWhyUs() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const form = reactive<ServicesWhyUsSettings>(structuredClone(defaultServicesWhyUs))
   const loading = ref(true), saving = ref(false), loaded = ref(false)
   const error = ref(''), notice = ref(''), snapshot = ref('')
@@ -12,7 +12,7 @@ export function useAdminServicesWhyUs() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<ServicesWhyUsSettings>('/api/services-why-us')) }
+    try { accept(await contentFetch<ServicesWhyUsSettings>('/api/services-why-us')) }
     catch { error.value = 'Не удалось загрузить блок «Почему мы». Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -24,7 +24,6 @@ export function useAdminServicesWhyUs() {
     saving.value = true
     try {
       accept(await adminFetch<ServicesWhyUsSettings>('/api/admin/services-why-us', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-services-why-us')
       notice.value = 'Блок «Почему мы» опубликован для всех детальных страниц услуг.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить блок «Почему мы». Повторите попытку.' }
     finally { saving.value = false }

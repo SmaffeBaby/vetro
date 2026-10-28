@@ -1,7 +1,7 @@
 import { isMediaPath } from '../../../shared/utils/media'
 import { aboutHeroInputSchema } from '../../../shared/utils/about-hero'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const parts = await readMultipartFormData(event)
   let settings: unknown

@@ -29,7 +29,7 @@ export function useAdminObjectGallery(){
   if(!parsed.success){error.value=parsed.error.issues[0]?.message||'Проверьте фотографии';return}
   const body=new FormData();body.set('settings',JSON.stringify(parsed.data));Object.entries(files).forEach(([id,file])=>body.set(`image:${id}`,file))
   saving.value=true
-  try{accept(await adminFetch<ObjectGallerySettings>(`/api/admin/object-gallery/${encodeURIComponent(form.objectId)}`,{method:'PUT',body}));await refreshNuxtData(`site-object-gallery-${form.objectId}`);if(form.mediaCleanupPending)error.value='Фотографии сохранены, но старые файлы пока не удалены. Повторите сохранение.';else notice.value='Фотографии выбранного объекта сохранены.'}
+  try{accept(await adminFetch<ObjectGallerySettings>(`/api/admin/object-gallery/${encodeURIComponent(form.objectId)}`,{method:'PUT',body}));if(form.mediaCleanupPending)error.value='Фотографии сохранены, но старые файлы пока не удалены. Повторите сохранение.';else notice.value='Фотографии выбранного объекта сохранены.'}
   catch(e){error.value=(e as {data?:{data?:{message?:string}}}).data?.data?.message||'Не удалось сохранить фотографии. Повторите попытку.'}finally{saving.value=false}
  }
  async function selectObject(id:string){if(!saving.value&&id!==selectedId.value)await navigateTo({path:'/admin',query:{section:'objects-gallery',object:id}})}

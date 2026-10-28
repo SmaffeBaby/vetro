@@ -3,7 +3,7 @@ import { defaultServices } from '#shared/config/default-services'
 import { servicesInputSchema, sortServiceCards } from '#shared/utils/services'
 
 export function useAdminServices() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const media = useMedia('Services/Cards')
   const form = reactive<ServicesSettings>(structuredClone(defaultServices))
   const loading = ref(true)
@@ -22,7 +22,7 @@ export function useAdminServices() {
   async function load() {
     if (saving.value) return
     loading.value = true; error.value = ''; notice.value = ''
-    try { accept(await $fetch<ServicesSettings>('/api/services')) }
+    try { accept(await contentFetch<ServicesSettings>('/api/services')) }
     catch { error.value = 'Не удалось загрузить услуги. Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -34,7 +34,6 @@ export function useAdminServices() {
     saving.value = true
     try {
       accept(await adminFetch<ServicesSettings>('/api/admin/services', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-services')
       if (form.mediaCleanupPending) error.value = 'Услуги сохранены, но старые SVG не удалены из Storage. Нажмите «Сохранить» для повторной попытки.'
       else notice.value = 'Услуги опубликованы. Изменения доступны на странице услуг.'
     } catch (e) {

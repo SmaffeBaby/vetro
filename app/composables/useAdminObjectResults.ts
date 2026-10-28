@@ -34,7 +34,7 @@ export function useAdminObjectResults(){
   const parsed=objectResultsInputSchema.safeParse(form)
   if(!parsed.success){error.value=parsed.error.issues[0]?.message||'Проверьте показатели';return}
   saving.value=true
-  try{accept(await adminFetch<ObjectResultsSettings>(`/api/admin/object-results/${encodeURIComponent(form.objectId)}`,{method:'PUT',body:parsed.data}));await refreshNuxtData(`site-object-results-${form.objectId}`);notice.value='Результаты выбранного объекта сохранены.'}
+  try{accept(await adminFetch<ObjectResultsSettings>(`/api/admin/object-results/${encodeURIComponent(form.objectId)}`,{method:'PUT',body:parsed.data}));notice.value='Результаты выбранного объекта сохранены.'}
   catch(e){error.value=(e as {data?:{data?:{message?:string}}}).data?.data?.message||'Не удалось сохранить результаты. Повторите попытку.'}
   finally{saving.value=false}
  }

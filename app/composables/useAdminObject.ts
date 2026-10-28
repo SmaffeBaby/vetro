@@ -38,7 +38,6 @@ export function useAdminObject(){
   try{
    const saved=await adminFetch<SiteObject>(`/api/admin/objects/${encodeURIComponent(parsed.data.id)}`,{method:'PUT',body});accept(saved);savedId=saved.id
    if(catalog.value){const index=catalog.value.objects.findIndex(o=>o.id===saved.id);if(index<0)catalog.value.objects.push(saved);else catalog.value.objects[index]=saved}
-   await refreshNuxtData('site-objects');await refreshNuxtData(`site-object-${saved.id}`)
    notice.value=saved.mediaCleanupPending?'Объект сохранён. Сохраните ещё раз для повторного удаления старого фото.':saved.published?'Объект опубликован.':'Объект сохранён и скрыт из каталога.'
   }catch(e){error.value=(e as {data?:{data?:{message?:string}}}).data?.data?.message||'Не удалось сохранить объект. Повторите попытку.'}
   finally{saving.value=false}

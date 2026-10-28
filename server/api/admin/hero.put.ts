@@ -1,6 +1,6 @@
 import { heroInputSchema } from '../../../shared/utils/hero'
 
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const parts = await readMultipartFormData(event)
   let settings: unknown

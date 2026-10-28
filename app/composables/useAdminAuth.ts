@@ -1,17 +1,47 @@
+import { useMutation } from '@tanstack/vue-query'
+
 interface AdminIdentity { id: string; email?: string }
+type AdminFetchOptions = { method?: 'PUT' | 'POST' | 'DELETE'; body?: Record<string, unknown> | FormData }
 
 export function useAdminAuth() {
-  const { $supabase } = useNuxtApp()
+  const { $supabase, $queryClient, $publishContentChange } = useNuxtApp()
   const identity = useState<AdminIdentity | null>('site-admin', () => null)
   const checking = useState('site-admin-checking', () => true)
   const pending = ref(false)
   const error = ref('')
   const credentials = reactive({ email: '', password: '' })
 
-  async function adminFetch<T>(url: string, options: { method?: 'PUT' | 'POST' | 'DELETE'; body?: Record<string, unknown> | FormData } = {}): Promise<T> {
+  function contentFetch<T>(url: string): Promise<T> {
+    return $queryClient.fetchQuery<T>({
+      queryKey: ['site', url],
+      staleTime: 0,
+      retry: false,
+      queryFn: ({ signal }) => $fetch(url, { signal, retry: 0 }) as Promise<T>
+    })
+  }
+
+  const mutation = useMutation({
+    mutationFn: ({ url, options, token }: { url: string; options: AdminFetchOptions; token: string }) =>
+      $fetch(url, { ...options, retry: 0, headers: { Authorization: `Bearer ${token}` } }),
+    onSuccess: async () => {
+      await $queryClient.cancelQueries()
+      await $queryClient.invalidateQueries()
+      $publishContentChange()
+    }
+  })
+
+  async function adminFetch<T>(url: string, options: AdminFetchOptions = {}): Promise<T> {
     const { data } = await $supabase.auth.getSession()
     if (!data.session) throw new Error('Сессия завершилась. Войдите снова.')
-    return await $fetch(url, { ...options, headers: { Authorization: `Bearer ${data.session.access_token}` } }) as T
+    const token = data.session.access_token
+    if (options.method) return await mutation.mutateAsync({ url, options, token }) as T
+    return $queryClient.fetchQuery<T>({
+      queryKey: ['admin', data.session.user.id, url],
+      // Explicit editor reloads always get the latest revision; concurrent reads share a request.
+      staleTime: 0,
+      retry: false,
+      queryFn: ({ signal }) => $fetch(url, { signal, retry: 0, headers: { Authorization: `Bearer ${token}` } }) as Promise<T>
+    })
   }
   async function restore() {
     checking.value = true
@@ -37,7 +67,8 @@ export function useAdminAuth() {
     if (signOutError) { error.value = 'Не удалось выйти. Попробуйте ещё раз.'; return }
     identity.value = null
     credentials.password = ''
-    clearNuxtData('site-header')
+    await $queryClient.cancelQueries({ queryKey: ['admin'] })
+    $queryClient.removeQueries({ queryKey: ['admin'] })
   }
-  return { identity, checking, pending, error, credentials, restore, login, logout, adminFetch }
+  return { identity, checking, pending, error, credentials, restore, login, logout, adminFetch, contentFetch }
 }

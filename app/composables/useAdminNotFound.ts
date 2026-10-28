@@ -2,7 +2,7 @@ import type { NotFoundSettings } from '#shared/types/not-found'
 import { defaultNotFound } from '#shared/config/default-not-found'
 import { notFoundInputSchema } from '#shared/utils/not-found'
 export function useAdminNotFound() {
-  const { adminFetch } = useAdminAuth()
+  const { adminFetch, contentFetch } = useAdminAuth()
   const form = reactive<NotFoundSettings>(structuredClone(defaultNotFound))
   const loading = ref(true), saving = ref(false), loaded = ref(false)
   const error = ref(''), notice = ref(''), snapshot = ref('')
@@ -12,7 +12,7 @@ export function useAdminNotFound() {
   async function load() {
     if (saving.value) return
     loading.value = true; loaded.value = false; error.value = ''; notice.value = ''
-    try { accept(await $fetch<NotFoundSettings>('/api/not-found')) }
+    try { accept(await contentFetch<NotFoundSettings>('/api/not-found')) }
     catch { error.value = 'Не удалось загрузить страницу 404. Проверьте подключение и миграцию базы данных.' }
     finally { loading.value = false }
   }
@@ -24,7 +24,6 @@ export function useAdminNotFound() {
     saving.value = true
     try {
       accept(await adminFetch<NotFoundSettings>('/api/admin/not-found', { method: 'PUT', body: parsed.data }))
-      await refreshNuxtData('site-not-found')
       notice.value = 'Страница 404 опубликована.'
     } catch (e) { error.value = (e as { data?: { data?: { message?: string } } }).data?.data?.message || 'Не удалось сохранить страницу 404. Повторите попытку.' }
     finally { saving.value = false }

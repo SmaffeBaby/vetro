@@ -4,8 +4,8 @@ import type { NotFoundSettings } from '#shared/types/not-found'
 import { defaultNotFound } from '#shared/config/default-not-found'
 
 const props = defineProps<{ error: NuxtError }>()
-const { data: settings } = await useFetch<NotFoundSettings>('/api/not-found', {
-  key: 'site-not-found', default: () => structuredClone(defaultNotFound), retry: 0
+const { data: settings } = await useSiteQuery<NotFoundSettings>('/api/not-found', {
+  default: () => structuredClone(defaultNotFound), retry: 0
 })
 const code = computed(() => props.error.statusCode || 500)
 const content = computed(() => code.value === 404 ? settings.value : {

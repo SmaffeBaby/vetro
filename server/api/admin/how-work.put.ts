@@ -1,5 +1,5 @@
 import { howWorkInputSchema, sortWorkCards } from '../../../shared/utils/how-work'
-export default defineEventHandler(async (event) => {
+export default defineContentMutationHandler(async (event) => {
   const { client } = await requireSiteAdmin(event)
   const parsed = howWorkInputSchema.safeParse(await readBody(event))
   if (!parsed.success) throw createError({ statusCode: 400, data: { message: parsed.error.issues[0]?.message } })

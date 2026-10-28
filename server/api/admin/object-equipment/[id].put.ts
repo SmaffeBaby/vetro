@@ -1,5 +1,5 @@
 import {objectEquipmentInputSchema} from '../../../../shared/utils/object-equipment'
-export default defineEventHandler(async(event)=>{
+export default defineContentMutationHandler(async(event)=>{
  const {client}=await requireSiteAdmin(event),id=await requireObjectRecord(client,getRouterParam(event,'id'))
  const parsed=objectEquipmentInputSchema.safeParse(await readBody(event))
  if(!parsed.success)throw createError({statusCode:400,data:{message:parsed.error.issues[0]?.message}})
