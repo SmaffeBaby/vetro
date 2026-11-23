@@ -1,6 +1,6 @@
 import type { HeroSettings } from '#shared/types/hero'
 import { defaultHero } from '#shared/config/default-hero'
-import { heroInputSchema } from '#shared/utils/hero'
+import { heroImageUrl, heroInputSchema } from '#shared/utils/hero'
 
 export function useAdminHero() {
   const { adminFetch, contentFetch } = useAdminAuth()
@@ -15,7 +15,7 @@ export function useAdminHero() {
   const selectedFile = shallowRef<File | null>(null)
   const localPreview = ref('')
   const imageRemoved = ref(false)
-  const imagePreview = computed(() => imageRemoved.value ? '' : localPreview.value || (form.imagePath ? media.url(form.imagePath) : ''))
+  const imagePreview = computed(() => imageRemoved.value ? '' : localPreview.value || (form.imagePath ? heroImageUrl(form.imagePath) : ''))
   const isDirty = computed(() => loaded.value && (JSON.stringify(form) !== snapshot.value || !!selectedFile.value || imageRemoved.value || !!form.mediaCleanupPending))
   function clearSelection() {
     localPreview.value = ''; selectedFile.value = null; imageRemoved.value = false

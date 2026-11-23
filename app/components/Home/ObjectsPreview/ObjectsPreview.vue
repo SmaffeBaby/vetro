@@ -6,7 +6,7 @@ const objects = computed(() => catalog.value?.objects.slice(0, 3) || [])
 </script>
 
 <template>
-  <section v-if="objects.length" id="home-objects" aria-labelledby="home-objects-title" class="home-objects mx-auto max-w-480 px-5 pb-16 text-site-ink tablet:px-8 tablet:pb-24 desktop:px-[4.95%] desktop:pb-32">
+  <section v-if="objects.length" id="home-objects" aria-labelledby="home-objects-title" class="home-objects mx-auto max-w-480 px-5 pt-[47.5px] pb-16 text-site-ink tablet:px-8 tablet:pt-[95px] tablet:pb-24 desktop:px-[4.95%] desktop:pb-32">
     <h2 id="home-objects-title" class="text-[28px] font-bold leading-tight tablet:text-[32px] desktop:text-[clamp(26px,1.6667vw,32px)]">{{ catalog?.settings.title }}</h2>
     <div class="mt-8 grid grid-cols-1 gap-5 tablet:mt-10 tablet:grid-cols-3 desktop:grid-cols-[repeat(3,minmax(0,1fr))_minmax(0,0.54fr)]">
       <ObjectsCard v-for="object in objects" :key="object.id" :object="object" :button-label="catalog?.settings.buttonLabel" variant="home" heading-tag="h3" />

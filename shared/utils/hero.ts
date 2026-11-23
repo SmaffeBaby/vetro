@@ -1,4 +1,10 @@
 import { z } from 'zod'
+import { defaultHeroImagePath } from '../config/default-hero'
+import { mediaUrl } from './media'
+
+export function heroImageUrl(path: string): string {
+  return path === defaultHeroImagePath ? path : mediaUrl(path)
+}
 
 export const heroInputSchema = z.object({
   title: z.string().trim().min(1, 'Введите заголовок').max(240, 'Заголовок: максимум 240 символов'),

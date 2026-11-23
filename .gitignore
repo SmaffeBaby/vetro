@@ -19,3 +19,7 @@ backups/
 artifacts/
 
 .deployment.env
+
+/deploy/local/
+/docker-compose.https.yml
+/docker-compose.override.yml
