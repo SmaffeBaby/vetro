@@ -1,13 +1,16 @@
+import { defaultHeroImageFilename, defaultHeroImagePath } from '../../shared/config/default-hero'
 import type { HeroSettings } from '../../shared/types/hero'
 
 export function serializeHero(row: Record<string, unknown>): HeroSettings {
+  const imagePath = (row.image_path as string | null) ?? null
+  const usesLegacyImage = imagePath === 'Home/Hero/fGW7pwOA-1-21cfbed6-f145-48a9-aa1b-281ca0158734.png'
   return {
     title: row.title as string,
     accentTitle: row.accent_title as string,
     text: row.text as string,
     regalia: row.regalia as string[],
-    imagePath: (row.image_path as string | null) ?? null,
-    imageFilename: (row.image_filename as string) || '',
+    imagePath: usesLegacyImage ? defaultHeroImagePath : imagePath,
+    imageFilename: usesLegacyImage ? defaultHeroImageFilename : (row.image_filename as string) || '',
     primaryButtonLabel: row.primary_button_label as string,
     secondaryButtonLabel: row.secondary_button_label as string,
     revision: Number(row.revision),

@@ -3,7 +3,7 @@ defineProps<{ label: string; secondary?: boolean; href?: string }>()
 </script>
 
 <template>
-  <component :is="href ? 'a' : 'button'" :href="href" :type="href ? undefined : 'button'" class="hero-button inline-flex max-w-full min-h-[70px] items-center justify-center gap-5 rounded-lg border px-7 py-5 text-base font-semibold leading-normal transition-colors" :class="secondary ? 'hero-button-secondary w-[232px] border-site-ink bg-white text-site-ink' : 'w-[352px] border-transparent bg-site-brand text-white shadow-[0_10px_18px_rgba(0,0,0,0.15)] hover:bg-site-brand-hover'">
+  <component :is="href ? 'a' : 'button'" :href="href" :type="href ? undefined : 'button'" class="hero-button inline-flex max-w-full min-h-[70px] items-center justify-center gap-5 rounded-lg border px-7 py-5 text-base font-semibold leading-normal transition-colors desktop:px-4 desktop:py-3" :class="secondary ? 'hero-button-secondary w-[232px] border-site-ink bg-transparent text-site-ink' : 'w-[352px] border-transparent bg-site-brand text-white shadow-[0_10px_18px_rgba(0,0,0,0.15)] hover:bg-site-brand-hover'">
     <span>{{ label }}</span>
     <img src="/images/header/arrow.svg" alt="" width="19.2882" height="12.216" class="shrink-0" :class="{ 'hero-secondary-arrow': secondary }" aria-hidden="true">
   </component>

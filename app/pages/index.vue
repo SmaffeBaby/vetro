@@ -2,9 +2,13 @@
   <div class="min-h-screen bg-white">
     <Header />
     <main>
-      <Hero />
-      <Skills />
-      <AboutCard />
+      <div class="overflow-x-clip bg-[rgba(244,243,244,1)]">
+        <div class="relative isolate mx-auto max-w-480">
+          <Hero />
+          <Skills />
+          <AboutCard />
+        </div>
+      </div>
       <ObjectsPreview />
       <Why />
       <HowWork />
